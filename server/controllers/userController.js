@@ -187,20 +187,23 @@ userController.addToken = async (req, res, next) => {
   }
 };
 
-userController.getCurrentUser = async (req, res, next) => {
-  try {
-    const currentUser = await CurrentUser.findOne({});
-    res.locals.currentUser = currentUser;
-    return next();
-  } catch {
-    return next({
-      log: `userController.getUserInfo ERROR: trouble getting user data from database`,
-      message: {
-        err: 'userController.getUserInfo: ERROR: trouble getting user data from database',
-      },
-    });
-  }
-};
+// userController.getCurrentUser = async (req, res, next) => {
+//   try {
+//     const { username } = req.body
+//     console.log(username)
+//     const currentUser = await Users.findOne({username:username});
+//     console.log(currentUser)
+//     //res.locals.currentUser = currentUser;
+//     return next();
+//   } catch {
+//     return next({
+//       log: `userController.getUserInfo ERROR: trouble getting user data from database`,
+//       message: {
+//         err: 'userController.getUserInfo: ERROR: trouble getting user data from database',
+//       },
+//     });
+//   }
+// };
 
 userController.setUser = async (req, res, next) => {
   try {

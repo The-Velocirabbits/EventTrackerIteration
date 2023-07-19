@@ -1,55 +1,39 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 // import '../styles.css';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Card, CardContent, Typography, Breadcrumbs } from '@mui/material';
+import { ValuesContext } from '../pages/Contexts';
 
 export default function Preference() {
-  const location = useLocation();
-  console.log('location: ', location);
-  // const { email, username, accessToken } = location.state;
+  // const location = useLocation();
+  // console.log('location: ', location);
+  const { globalValues } = useContext(ValuesContext);
+  const { email, username, access_token } = globalValues;
   // const email = 'haliahaynes';
+
   const [userData, setUserData] = useState({});
   const [newArtist, setNewArtist] = useState('');
   const [currArtists, setCurrArtists] = useState([]);
   const [newGenre, setNewGenre] = useState('');
   const [currGenres, setCurrGenres] = useState([]);
+  const [currLocation, setCurrLocation] = useState({city:'', state:''})
 
   useEffect(() => {
     const fetchingData = async () => {
-      try {
-        // const {email} = location.state
-
-        // fetch current user email
-        const response = await fetch(`/api/user`, {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        });
-        const currentUser = await response.json();
-        console.log('currentUser: ', currentUser);
-        /* fetches data of current user
-          {
-            email: email
-            accessToken: accesToken
-          }
-          */
-        currentUserInfo(currentUser);
-      } catch {
-        throw new Error('Error with initial fetch request!');
-      }
-    };
-
-    // fetch current user's info stored in their user document
-    const currentUserInfo = async (currentUser) => {
-      const email = currentUser.email;
+      //~ use current email to get information on user
+      // const email = currentUser.email;
       try {
         const response = await fetch(
-          `/api/preferences?email=${encodeURIComponent(email)}`,
+          `/api/user?email=${email}`,
           {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
           }
         );
         const data = await response.json();
+        console.log('data: ',data)
+        console.log(data.location.city)
+        console.log(data.location.state)
         /*
          user document
         // {
@@ -60,12 +44,61 @@ export default function Preference() {
         // }
         */
         setUserData(data);
+        setCurrLocation({city: data.location.city, state: data.location.state})
         setCurrArtists(data.artists);
         setCurrGenres(data.genres);
       } catch (err) {
         throw new Error('error with currentUserInfo: ', err);
       }
+
+      //   // fetch current user email
+      //   const response = await fetch(`/api/user?email=${username}`, {
+      //     method: 'POST',
+      //     headers: { 'Content-Type': 'application/json' },
+      //     body: JSON.stringify({ email:email }),
+      //   });
+      //   const currentUser = await response.json();
+      //   console.log('currentUser: ', currentUser);
+      //   /* fetches data of current user
+      //     {
+      //       email: email
+      //       accessToken: accesToken
+      //     }
+      //     */
+      //   currentUserInfo(currentUser);
+      // } catch {
+      //   throw new Error('Error with initial fetch request!');
+      // }
     };
+
+    // fetch current user's info stored in their user document
+    // const currentUserInfo = async (currentUser) => {
+    //   const email = currentUser.email;
+    //   try {
+    //     const response = await fetch(
+    //       `/api/preferences?email=${encodeURIComponent(email)}`,
+    //       {
+    //         method: 'GET',
+    //         headers: { 'Content-Type': 'application/json' },
+    //       }
+    //     );
+    //     const data = await response.json();
+    //     /*
+    //      user document
+    //     // {
+    //     // email
+    //     // location: {city:, state:}
+    //     // artists:[1,2,3]
+    //     // genres: [a,b,c]
+    //     // }
+    //     */
+    //     setUserData(data);
+    //     setCurrArtists(data.artists);
+    //     setCurrGenres(data.genres);
+    //   } catch (err) {
+    //     throw new Error('error with currentUserInfo: ', err);
+    //   }
+    // };
 
     fetchingData();
   }, [location]);
@@ -92,7 +125,8 @@ export default function Preference() {
     try {
       const toUpdate = {
         email: userData.email,
-        location: { city: userData.city, state: userData.state },
+        location: { city: currLocation.city, state: currLocation.location.state },
+        // location: { city: userData.location.city, state: userData.location.state },
       };
       await fetch(
         `/api/preferences?email=${encodeURIComponent(userData.email)}`,
@@ -175,6 +209,8 @@ export default function Preference() {
   // setCurrArtists([])
   console.log('currGenres: ', currGenres)
   // setCurrGenres([])
+  // console.log('locations1', userData.locations)
+  console.log('locations2: ',  currLocation)
 
   return (
     <div className="preferencesPage">
@@ -192,8 +228,8 @@ export default function Preference() {
             <h1>Basic Info</h1>
             <p>Username: {userData.username}</p>
             <p>Email: {userData.email}</p>
-            <p>City: {userData.city}</p>
-            <p>State: {userData.state}</p>
+            <p>City: {currLocation.city}</p>
+            <p>State: {currLocation.state}</p>
             {/* add update function! */}
           </div>
           <div>
@@ -266,7 +302,7 @@ export default function Preference() {
               <div className="artistList">
                 <ul>
                   {currArtists.map((artist, i) => (
-                    <li key={artist + i}>{artist}</li>
+                    <li key={i}>{artist}</li>
                   ))}
                 </ul>
               </div>
