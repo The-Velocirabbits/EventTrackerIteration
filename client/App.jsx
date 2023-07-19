@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ValuesContext } from './pages/Contexts';
-
-
-import styles from './styles.css';
 //import all pages
 import Home from './pages/Home.jsx';
 import Signin from './pages/Signin.jsx';
@@ -13,10 +10,10 @@ import Callback from './pages/Callback.jsx';
 
 //create app HTML structure
 const App = () => {
-  const [globalValues, setGlobalValues] = useState({access_token:'', email:'', username: ''});
+  const [globalValues, setGlobalValues] = useState({ access_token: '', email: '', username: '' });
 
   return (
-    <div className="App">
+    <div>
       <ValuesContext.Provider value={{ globalValues, setGlobalValues }}>
         <Routes>
           {/* Add each page as a route */}
