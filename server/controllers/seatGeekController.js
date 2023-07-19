@@ -9,10 +9,10 @@ const seatGeekController = {};
 seatGeekController.getArtistEvents = async (req, res, next) => {
   try {
     const eventsArray = [];
-    // const artists = res.locals.userInfo.artists;
-    // const city = res.locals.userInfo.location.city;
-    const artists = ['ice-spice', 'all-them-witches', 'clutch'];
-    const city = 'Denver';
+    const artists = res.locals.userInfo.artists;
+    const city = res.locals.userInfo.location.city;
+    //const artists = ['ice-spice', 'all-them-witches', 'clutch'];
+    //const city = 'Denver';
 
     //generating constants for todays date and date three months from now in API format
     const date = new Date();
@@ -62,10 +62,11 @@ seatGeekController.getArtistEvents = async (req, res, next) => {
 seatGeekController.getGenreEvents = async (req, res, next) => {
   try {
     const eventsArray = [];
-    // const genre = req.query.genre;
-    // const city = res.locals.userInfo.location.city;
-    const genre = 'rock';
-    const city = 'Denver';
+    const genre = res.locals.userInfo.genres;
+    console.log('genre:', genre);
+    const city = res.locals.userInfo.location.city;
+    // const genre = 'rock';
+    // const city = 'Denver';
 
     //generating constants for todays date and date three months from now in API format
     const date = new Date();
@@ -77,23 +78,26 @@ seatGeekController.getGenreEvents = async (req, res, next) => {
     /*fetch to seatgeek API 
       query based on City, Artist, and date range of 3 Months
       */
-    const response = await fetch(
-      `https://api.seatgeek.com/2/events/?client_id=${seatgeek.client_id}&client_secret=${seatgeek.client_secret}&q=${genre}&venue.city=${city}&datetime_utc.gte=${today}&datetime_utc.lte=${threeMonths}&per_page=25`
-    );
-    const { events } = await response.json();
-    //making a separate object for each event returned back for an artist
-    events.forEach((el) => {
-      const event = {
-        artist: el.performers[0].name,
-        genre: genre,
-        price: el.stats.lowest_price,
-        date: el.datetime_local,
-        venue: el.venue.name,
-        eventUrl: el.url,
-        imgUrl: el.performers[0].image,
-      };
-      eventsArray.push(event);
-    });
+    for (let i = 0; i < genre.length; i++) {
+      const response = await fetch(
+        `https://api.seatgeek.com/2/events/?client_id=${seatgeek.client_id}&client_secret=${seatgeek.client_secret}&q=${genre[i]}&venue.city=${city}&datetime_utc.gte=${today}&datetime_utc.lte=${threeMonths}&per_page=25`
+      );
+      const { events } = await response.json();
+      //making a separate object for each event returned back for an artist
+      events.forEach((el) => {
+        const event = {
+          artist: el.performers[0].name,
+          genre: genre,
+          price: el.stats.lowest_price,
+          date: el.datetime_local,
+          venue: el.venue.name,
+          eventUrl: el.url,
+          imgUrl: el.performers[0].image,
+        };
+        eventsArray.push(event);
+      });
+    }
+
     //attaching Array of objects to send as response to front end
     res.locals.genreEvents = eventsArray;
     return next();

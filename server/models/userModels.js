@@ -33,5 +33,14 @@ const userSchema = new Schema({
 // creats a model for the 'species' collection that will be part of the export
 const Users = mongoose.model('user', userSchema);
 
+const currentUserSchema = new Schema({
+  email: String,
+  accessToken: String,
+  username: String,
+});
+
+// creats a model for the 'species' collection that will be part of the export
+const CurrentUsers = mongoose.model('currentUser', currentUserSchema);
+
 // exports all the models in an object to be used in the controller
-module.exports = { Users };
+module.exports = { Users, CurrentUsers };

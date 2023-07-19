@@ -14,6 +14,7 @@ export default function HomePage() {
   // const location = useLocation();
   const { globalValues } = useContext(ValuesContext);
   const { email, username, access_token } = globalValues;
+
   const [userData, setUserData] = useState({});
   const [artists, setArtists] = useState(['ye']);
   const [genres, setGenres] = useState(['genre']);
@@ -36,6 +37,7 @@ export default function HomePage() {
       }
     };
     fetchingArtists();
+
 
     const fetchingGenres = async () => {
       try {
