@@ -18,9 +18,6 @@ export default function HomePage() {
   const [artists, setArtists] = useState(['ye']);
   const [genres, setGenres] = useState(['genre']);
 
-  // console.log('email: ', email);
-  // console.log(typeof email);
-
   useEffect(() => {
     console.log('Global Values: ', globalValues)
     const fetchingArtists = async () => {
@@ -33,8 +30,6 @@ export default function HomePage() {
           }
         );
         const artists = await response.json();
-        console.log(artists)
-        // setArtists(artists.artistShows);
         setArtists(artists);
       } catch (err) {
         throw new Error('Error with artist fetch request!', err);
@@ -52,19 +47,14 @@ export default function HomePage() {
           }
         );
         const genres = await response.json();
-        console.log(genres);
         const returned = genres.slice(0, 30);
-        console.log(returned);
         setGenres(returned);
       } catch (err) {
         throw new Error('Error with genre fetch request!', err);
       }
     };
     fetchingGenres();
-  }, []); //added empty array
-  // console.log(location.state);
-  // console.log(artist)
-  // console.log(genres);
+  }, []);
   return (
     <div className="homePage">
       <div className="breadcrumb">
@@ -83,10 +73,60 @@ export default function HomePage() {
         </Breadcrumbs>
       </div>
       <div className="home"> {`Welcome, ${username}!`}</div>
-    
-      <div className="showBox">
-        <h1>Upcoming Shows In Your Area</h1>
+
+
+      <div className='mainBox'>
+
+
+        <div className="showBox">
+          <h3>Upcoming Shows</h3>
+          <div className='displayBoxes'>
+            <div className="artistShows">
+              <h2>Shows Filtered By Artist: </h2>
+              <div className='overflowBox'>
+                {artists ? artists.map((el) => (
+                  <div key={el.artist} className="card">
+                    <img src={el.imgUrl} />
+                    <div>Artist: {el.artist}</div>
+                    <div>Genre: {el.genre}</div>
+                    <div>Date: {el.date}</div>
+                    <div>Location: {el.venue}</div>
+                    <div>Price: ${el.price}</div>
+                  </div>
+                )) : 'No artists'}
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div className="showBox">
+          <h3>Upcoming Shows</h3>
+          <div className='displayBoxes'>
+            <div className="artistShows">
+              <h2>Shows Filtered By Genre</h2>
+              <div className='overflowBox'>
+                {genres ? genres.map((el) => (
+                  <div key={el.artist} className="card">
+                    <img src={el.imgUrl} />
+                    <div>Artist: {el.artist}</div>
+                    <div>Genre: {el.genre}</div>
+                    <div>Date: {el.date}</div>
+                    <div>Location: {el.venue}</div>
+                    <div>Price: ${el.price}</div>
+                  </div>
+                )) : 'No artists'}
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
       </div>
+
+
     </div>
   );
 }
