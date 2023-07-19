@@ -31,13 +31,14 @@ export default function Callback() {
         //TODO: set it to have updated email
         setGlobalValues({access_token:access_token, email:'nacho.cheese999@gmail.com', username: 'currymonstanacho'})
 
-        //~ use access token to get profile data
+        // //~ use access token to get profile data
         const headers = { 'Authorization': `Bearer ${access_token}` }
-        const response2 = await fetch('https://api.spotify.com/v1/users/currymonstanacho',
-          { headers: headers });
-        const profile = await response2.json()
-        console.log('PROFILE INFORMATION')
-        console.log(profile)
+        // const response2 = await fetch('https://api.spotify.com/v1/users/currymonstanacho',
+        //   { headers: headers });
+        // const profile = await response2.json()
+        // console.log('PROFILE INFORMATION')
+        // console.log(profile)
+
         //~ get top artists
         const response3 = await fetch('https://api.spotify.com/v1/me/top/artists', { headers: headers });
         const topArtists = await response3.json()
