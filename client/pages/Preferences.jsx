@@ -6,7 +6,7 @@ import { Card, CardContent, Typography, Breadcrumbs } from '@mui/material';
 export default function Preference() {
   const location = useLocation();
   console.log('location: ', location);
-  const { email, username, accessToken } = location.state;
+  // const { email, username, accessToken } = location.state;
   // const email = 'haliahaynes';
   const [userData, setUserData] = useState({});
   const [newArtist, setNewArtist] = useState('');
@@ -18,6 +18,30 @@ export default function Preference() {
     const fetchingData = async () => {
       try {
         // const {email} = location.state
+
+        // fetch current user email
+        const response = await fetch(`/api/user`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        const currentUser = await response.json();
+        console.log('currentUser: ', currentUser);
+        /* fetches data of current user
+          {
+            email: email
+            accessToken: accesToken
+          }
+          */
+        currentUserInfo(currentUser);
+      } catch {
+        throw new Error('Error with initial fetch request!');
+      }
+    };
+
+    // fetch current user's info stored in their user document
+    const currentUserInfo = async (currentUser) => {
+      const email = currentUser.email;
+      try {
         const response = await fetch(
           `/api/preferences?email=${encodeURIComponent(email)}`,
           {
@@ -26,20 +50,23 @@ export default function Preference() {
           }
         );
         const data = await response.json();
-        console.log(data);
+        /*
+         user document
         // {
         // email
         // location: {city:, state:}
         // artists:[1,2,3]
         // genres: [a,b,c]
         // }
+        */
         setUserData(data);
         setCurrArtists(data.artists);
         setCurrGenres(data.genres);
-      } catch {
-        throw new Error('Error with initial fetch request!');
+      } catch (err) {
+        throw new Error('error with currentUserInfo: ', err);
       }
     };
+
     fetchingData();
   }, [location]);
 
@@ -64,14 +91,17 @@ export default function Preference() {
     e.preventDefault();
     try {
       const toUpdate = {
-        email: email,
+        email: userData.email,
         location: { city: userData.city, state: userData.state },
       };
-      await fetch(`/api/preferences?email=${encodeURIComponent(email)}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(toUpdate),
-      });
+      await fetch(
+        `/api/preferences?email=${encodeURIComponent(userData.email)}`,
+        {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(toUpdate),
+        }
+      );
     } catch (err) {
       console.log(err);
     }
@@ -91,14 +121,17 @@ export default function Preference() {
     }
     try {
       const addInfo = {
-        email: email,
+        email: userData.email,
         artists: newArtist,
       };
-      await fetch(`/api/preferences?email=${encodeURIComponent(email)}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(addInfo),
-      });
+      await fetch(
+        `/api/preferences?email=${encodeURIComponent(userData.email)}`,
+        {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(addInfo),
+        }
+      );
       setCurrArtists((curr) => [...curr, newArtist]);
       setNewArtist('');
     } catch (err) {
@@ -120,14 +153,17 @@ export default function Preference() {
     }
     try {
       const addInfo = {
-        email: email,
+        email: userData.email,
         genres: newGenre,
       };
-      await fetch(`/api/preferences?email=${encodeURIComponent(email)}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(addInfo),
-      });
+      await fetch(
+        `/api/preferences?email=${encodeURIComponent(userData.email)}`,
+        {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(addInfo),
+        }
+      );
       setCurrGenres((curr) => [...curr, newGenre]);
       setNewGenre('');
     } catch (err) {
@@ -147,21 +183,15 @@ export default function Preference() {
           <p color="text.primary" className="breadcrumbs">
             PREFERENCES
           </p>
-          <Link
-            underline="hover"
-            color="inherit"
-            to={{ pathname: '/home', state: { email, username, accessToken } }}
-          >
-            HOME PAGE
-          </Link>
+          <Link to="/home">HOME PAGE</Link>
         </Breadcrumbs>
       </div>
       <div className="preferences">
         <div className="userInfo">
           <div className="basicInfo">
             <h1>Basic Info</h1>
-            <p>Username: {username}</p>
-            <p>Email: {email}</p>
+            <p>Username: {userData.username}</p>
+            <p>Email: {userData.email}</p>
             <p>City: {userData.city}</p>
             <p>State: {userData.state}</p>
             {/* add update function! */}

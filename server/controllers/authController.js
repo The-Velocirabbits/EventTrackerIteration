@@ -146,7 +146,7 @@ authController.getTokens = (req, res, next) => {
         return next()
     } else {
       return next({
-        log: 'error in authController.getTokens, invalid token: ' + err,
+        log: 'error in authController.getTokens, invalid token: ' + console.error(),
         message: 'Error authenticating user. Please try again.'
       })
 

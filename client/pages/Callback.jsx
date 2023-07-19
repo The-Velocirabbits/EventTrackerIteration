@@ -47,11 +47,12 @@ export default function Callback() {
 
         //~ add navigation here
         navigate('/home')
-        
+       
       }
       catch (err) {
         console.log(err)
       }
+
     }
 
     getData()
