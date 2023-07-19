@@ -1,77 +1,86 @@
-import React, { useEffect, useState } from 'react';
-import '../styles.css';
+import React, { useEffect, useState, useContext } from 'react';
+// import '../styles.css';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Card, CardContent, Typography, Breadcrumbs } from '@mui/material';
+import { ValuesContext } from '../pages/Contexts';
 
 export default function Preference() {
-  const location = useLocation();
-  console.log('location: ', location);
-  const { email, username, accessToken } = location.state;
+  // const location = useLocation();
+  // console.log('location: ', location);
+  const { globalValues } = useContext(ValuesContext);
+  const { email, username, access_token } = globalValues;
   // const email = 'haliahaynes';
+
   const [userData, setUserData] = useState({});
   const [newArtist, setNewArtist] = useState('');
   const [currArtists, setCurrArtists] = useState([]);
   const [newGenre, setNewGenre] = useState('');
   const [currGenres, setCurrGenres] = useState([]);
+  const [currLocation, setCurrLocation] = useState({ city: '', state: '' })
 
   useEffect(() => {
     const fetchingData = async () => {
+      //~ use current email to get information on user
+      // const email = currentUser.email;
       try {
-        // const {email} = location.state
         const response = await fetch(
-          `/api/preferences?email=${encodeURIComponent(email)}`,
+          `/api/user?email=${email}`,
           {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
           }
         );
         const data = await response.json();
-        console.log(data);
-        // {
-        // email
-        // location: {city:, state:}
-        // artists:[1,2,3]
-        // genres: [a,b,c]
-        // }
+        console.log('data: ', data)
+        console.log(data.location.city)
+        console.log(data.location.state)
         setUserData(data);
+        setCurrLocation({ city: data.location.city, state: data.location.state })
         setCurrArtists(data.artists);
         setCurrGenres(data.genres);
-      } catch {
-        throw new Error('Error with initial fetch request!');
       }
-    };
+      catch (err) {
+        throw new Error('error with currentUserInfo: ', err);
+      }
+    }
     fetchingData();
-  }, [location]);
+  }, []);
 
   //changing state's state
   const handleChangeCity = (e) => {
     const newCity = e.target.value;
-    setUserData((curr) => ({
-      ...curr,
-      city: newCity,
-    }));
+    setCurrLocation((prevLocation) => ({ ...prevLocation, city: newCity }))
+    // setUserData((curr) => ({
+    //   ...curr,
+    //   city: newCity,
+    // }));
   };
   //changing city's state
   const handleChangeState = (e) => {
     const newState = e.target.value;
-    setUserData((curr) => ({
-      ...curr,
-      state: newState,
-    }));
+    setCurrLocation((prevLocation) => ({ ...prevLocation, state: newState }))
+    // setUserData((curr) => ({
+    //   ...curr,
+    //   state: newState,
+    // }));
   };
   //sending PATCH request with updated state
   const handleLocation = async (e) => {
     e.preventDefault();
     try {
       const toUpdate = {
-        email: email,
-        location: { city: userData.city, state: userData.state },
+        email: userData.email,
+        location: { city: currLocation.city, state: currLocation.state },
+        // location: { city: userData.location.city, state: userData.location.state },
       };
-      await fetch(`/api/preferences?email=${encodeURIComponent(email)}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(toUpdate),
-      });
+      await fetch(
+        `/api/preferences?email=${encodeURIComponent(userData.email)}`,
+        {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(toUpdate),
+        }
+      );
     } catch (err) {
       console.log(err);
     }
@@ -91,14 +100,17 @@ export default function Preference() {
     }
     try {
       const addInfo = {
-        email: email,
+        email: userData.email,
         artists: newArtist,
       };
-      await fetch(`/api/preferences?email=${encodeURIComponent(email)}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(addInfo),
-      });
+      await fetch(
+        `/api/preferences?email=${encodeURIComponent(userData.email)}`,
+        {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(addInfo),
+        }
+      );
       setCurrArtists((curr) => [...curr, newArtist]);
       setNewArtist('');
     } catch (err) {
@@ -120,20 +132,30 @@ export default function Preference() {
     }
     try {
       const addInfo = {
-        email: email,
+        email: userData.email,
         genres: newGenre,
       };
-      await fetch(`/api/preferences?email=${encodeURIComponent(email)}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(addInfo),
-      });
+      await fetch(
+        `/api/preferences?email=${encodeURIComponent(userData.email)}`,
+        {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(addInfo),
+        }
+      );
       setCurrGenres((curr) => [...curr, newGenre]);
       setNewGenre('');
     } catch (err) {
       console.log(err);
     }
   };
+
+  console.log('currArtists: ', currArtists)
+  // setCurrArtists([])
+  console.log('currGenres: ', currGenres)
+  // setCurrGenres([])
+  // console.log('locations1', userData.locations)
+  console.log('locations2: ', currLocation)
 
   return (
     <div className="preferencesPage">
@@ -142,23 +164,17 @@ export default function Preference() {
           <p color="text.primary" className="breadcrumbs">
             PREFERENCES
           </p>
-          <Link
-            underline="hover"
-            color="inherit"
-            to={{ pathname: '/home', state: { email, username, accessToken } }}
-          >
-            HOME PAGE
-          </Link>
+          <Link to="/home">HOME PAGE</Link>
         </Breadcrumbs>
       </div>
       <div className="preferences">
         <div className="userInfo">
           <div className="basicInfo">
             <h1>Basic Info</h1>
-            <p>Username: {username}</p>
-            <p>Email: {email}</p>
-            <p>City: {userData.city}</p>
-            <p>State: {userData.state}</p>
+            <p>Username: {userData.username}</p>
+            <p>Email: {userData.email}</p>
+            <p>City: {currLocation.city}</p>
+            <p>State: {currLocation.state}</p>
             {/* add update function! */}
           </div>
           <div>
@@ -231,7 +247,7 @@ export default function Preference() {
               <div className="artistList">
                 <ul>
                   {currArtists.map((artist, i) => (
-                    <li key={artist + i}>{artist}</li>
+                    <li key={i}>{artist}</li>
                   ))}
                 </ul>
               </div>

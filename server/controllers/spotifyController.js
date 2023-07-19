@@ -1,8 +1,10 @@
 const spotifyController = {};
+const { Users, CurrentUsers } = require('../models/userModels.js');
 const request = require('request'); // "Request" library
 
 //get request to SeatGeek based on user preferences
 spotifyController.getTopArtists = async (req, res, next) => {
+  console.log('inside spotifyController.getTopArtists')
   const accessToken = res.locals.accessToken;
 
   const searchParams = {
@@ -22,15 +24,14 @@ spotifyController.getTopArtists = async (req, res, next) => {
     artistArray.push(el.name);
   });
   res.locals.spotifyArtists = artistArray;
+
 };
 
 spotifyController.getAccountInfo = async (req, res, next) => {
+  console.log('inside spotifyController.getAccountInfo')
 
   try {
-    console.log('entered getAccountInfo');
-    console.log('body', req.body);
     const accessToken = req.body.accessToken;
-    console.log('accessToken', accessToken);
 
     const searchParams = {
       method: 'GET',
@@ -41,12 +42,9 @@ spotifyController.getAccountInfo = async (req, res, next) => {
     };
     const response = await fetch('https://api.spotify.com/v1/me', searchParams);
     const data = await response.json();
-    console.log('data', data);
     const { email, display_name } = data;
-    console.log('email', email, 'dispaly name', display_name);
     res.locals.email = email;
     res.locals.username = display_name;
-    console.log('leaving getAccountInfo');
     return next();
   } catch (err) {
     return next({

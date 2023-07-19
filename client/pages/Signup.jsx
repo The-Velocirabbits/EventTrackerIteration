@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import '../styles.css';
+// import '../styles.css';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 export default function Signup() {
-  const location = useLocation();
-  const { email, accessToken, username } = location.state;
-  console.log('email', email, 'accessToken', accessToken, 'username', username);
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [city, setUserCity] = useState('');
   const [state, setUserState] = useState('');
   const navigate = useNavigate();
@@ -13,6 +12,31 @@ export default function Signup() {
   // send the location and email to the database!!
   //get access token!
   // on submit, the inputs are sent in a req body to the server at /api/signup
+  useEffect(() => {
+    const fetchingData = async () => {
+      try {
+        // const {email} = location.state
+        const response = await fetch(`/api/user`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        const data = await response.json();
+        console.log(data);
+        /*
+          {
+            email: email
+            username: username
+          }
+          */
+        setUsername(data.username);
+        setEmail(data.email);
+      } catch {
+        throw new Error('Error with initial fetch request!');
+      }
+    };
+    fetchingData();
+  }, []);
+
   const handleNewUser = async (e) => {
     e.preventDefault();
     try {
@@ -22,20 +46,16 @@ export default function Signup() {
       setUserState(userState);
       const signupReq = {
         email: email,
-        username: username,
         city: userCity,
         state: userState,
-        accessToken: accessToken,
       };
 
       await fetch('/api/signup', {
-        method: 'POST',
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(signupReq),
       });
-      navigate('/preferences', {
-        state: { email, accessToken, username },
-      });
+      navigate('/preferences');
     } catch (err) {
       console.log('handleNewUser error:', err);
     }

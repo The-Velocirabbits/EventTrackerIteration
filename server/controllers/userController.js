@@ -1,10 +1,13 @@
-const { Users } = require('../models/userModels.js');
+const { resolvePath } = require('react-router');
+const { Users, CurrentUsers } = require('../models/userModels.js');
 
 const userController = {};
 
 //fetching user document from 'Users' collection in database
 userController.getUserInfo = async (req, res, next) => {
+  console.log('inside userController.getUserInfo')
   const email = req.query.email;
+
   if (!email)
     return next({
       log: `userController.getUserInfo ERROR: email missing from req body`,
@@ -26,6 +29,7 @@ userController.getUserInfo = async (req, res, next) => {
     genres: [Genre1, Genre2, Genre3]
     }
     */
+    console.log('leaving userController.getUserInfo')
 
     return next();
   } catch {
@@ -39,6 +43,7 @@ userController.getUserInfo = async (req, res, next) => {
 };
 
 userController.createUser = async (req, res, next) => {
+  console.log('inside  userController.createUser')
   const { email, city, state, accessToken, username } = req.body;
   if (!email || !city || !state || !username || !accessToken)
     return next({
@@ -55,6 +60,7 @@ userController.createUser = async (req, res, next) => {
       location: { city, state },
     });
     res.locals.newUser = newUser;
+    console.log('leaving userController.createUser')
     return next();
   } catch (err) {
     return next({
@@ -63,10 +69,14 @@ userController.createUser = async (req, res, next) => {
         err: `userController.createUser ERROR: ${err}`,
       },
     });
+
   }
+  return next();
 };
 
 userController.updateUser = async (req, res, next) => {
+  console.log('inside  userController.updateUser')
+
   const email = req.query.email;
   const { artists, genres, location } = req.body;
   console.log(artists);
@@ -99,13 +109,13 @@ userController.updateUser = async (req, res, next) => {
     if (genres) {
       const updatedUser = await Users.findOneAndUpdate(
         { email: email },
-        { genres: genres },
+        { $push: { genres: genres } },
         { new: true }
       );
       res.locals.updatedUser = updatedUser;
     }
     console.log(res.locals.updatedUser);
-
+    console.log('leaving  userController.updateUser')
     return next();
   } catch (err) {
     return next({
@@ -118,6 +128,7 @@ userController.updateUser = async (req, res, next) => {
 };
 //initially updates users prefered artists
 userController.updateUserSpotify = async (req, res, next) => {
+  console.log('inside  userController.updateUserSpotify')
   const email = res.locals.email;
   const artists = res.locals.spotifyArtists;
   if (!artists || !email)
@@ -135,6 +146,7 @@ userController.updateUserSpotify = async (req, res, next) => {
       { new: true }
     );
     res.locals.updatedUserSpotify = updatedUserSpotify;
+    console.log('leaving userController.updateUserSpotify')
     return next();
   } catch (err) {
     return next({
@@ -149,10 +161,11 @@ userController.updateUserSpotify = async (req, res, next) => {
 //add middleware to send access token to database
 userController.addToken = async (req, res, next) => {
   console.log('entering addToken');
+  console.log('LOOK HERE: ', res.locals)
   const accessToken = req.body.accessToken;
-  const email = res.locals.userEmail;
+  const email = res.locals.email;
   const username = res.locals.username;
-  const exists = false;
+  let exists = false;
   try {
     const userDoc = await Users.findOneAndUpdate(
       { email: email },
@@ -173,4 +186,41 @@ userController.addToken = async (req, res, next) => {
     });
   }
 };
+
+// userController.getCurrentUser = async (req, res, next) => {
+//   try {
+//     const { username } = req.body
+//     console.log(username)
+//     const currentUser = await Users.findOne({username:username});
+//     console.log(currentUser)
+//     //res.locals.currentUser = currentUser;
+//     return next();
+//   } catch {
+//     return next({
+//       log: `userController.getUserInfo ERROR: trouble getting user data from database`,
+//       message: {
+//         err: 'userController.getUserInfo: ERROR: trouble getting user data from database',
+//       },
+//     });
+//   }
+// };
+
+userController.setUser = async (req, res, next) => {
+  try {
+    const currentUser = await CurrentUser.findOneAndUpdate(
+      {},
+      { email: res.locals.email, username: res.locals.username }
+    );
+    res.locals.currentUser = currentUser;
+    return next();
+  } catch {
+    return next({
+      log: `userController.getUserInfo ERROR: trouble setting user`,
+      message: {
+        err: 'userController.getUserInfo: ERROR: trouble setting user',
+      },
+    });
+  }
+};
+
 module.exports = userController;

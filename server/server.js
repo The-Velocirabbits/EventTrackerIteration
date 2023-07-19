@@ -23,6 +23,7 @@ const preferenceRouter = require('./routes/preferenceRouter');
 // const signinRouter = require('./routes/signinRouter');
 const signupRouter = require('./routes/signupRouter');
 const authRouter = require('./routes/authRouter');
+const userRouter = require('./routes/userRouter');
 
 //establishing router paths
 app.use('/api/home', homeRouter);
@@ -30,8 +31,7 @@ app.use('/api/preferences', preferenceRouter);
 // app.use('/api/signin', signinRouter);
 app.use('/api/signup', signupRouter);
 app.use('/api/authentication', authRouter);
-//fetch spotify user email
-//store token and email in database
+app.use('/api/user', userRouter);
 
 //serve bundle during p roduction build
 if (process.env.NODE_ENV === 'production') {

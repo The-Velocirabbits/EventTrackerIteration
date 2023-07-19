@@ -21,13 +21,10 @@ router.get(
   authController.checkState,
   authController.getTokens,
   (req, res) => {
-    console.log('acces token: ', res.locals.accessToken);
-    console.log('refresh token: ', res.locals.refreshToken);
-    console.log(
-      'options to pass into spotify api requests: ',
-      res.locals.options
-    );
-    return res.status(200).json(res.locals.accessToken);
+    console.log('finished processing')
+    console.log('access token: ', res.locals.access_token);
+    console.log('refresh token: ', res.locals.refresh_token);
+    return res.status(200).json(res.locals.access_token);
   }
 );
 
@@ -36,21 +33,11 @@ router.get(
 router.post(
   '/email',
   spotifyController.getAccountInfo,
-  userController.addToken,
+  userController.getUserInfo,
+  userController.createUser,
+  userController.setUser,
   (req, res) => {
-    const email = res.locals.email;
-    const username = res.locals.username;
-    const exists = res.locals.exists;
-
-    //TODO: frontEnd expects response:
-    const responseObj = {
-      email: email,
-      exists: exists,
-      accessToken: req.body.accessToken,
-      username: username,
-    };
-    console.log('responseObj', responseObj);
-    return res.status(200).json(responseObj);
+    return res.status(200).json(res.locals.exists);
   }
 );
 
