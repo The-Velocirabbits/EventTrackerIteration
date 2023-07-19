@@ -1,4 +1,5 @@
-const { Users } = require('../models/userModels.js');
+const { resolvePath } = require('react-router');
+const { Users, CurrentUsers } = require('../models/userModels.js');
 
 const userController = {};
 
@@ -6,6 +7,7 @@ const userController = {};
 userController.getUserInfo = async (req, res, next) => {
   console.log('inside userController.getUserInfo')
   const email = req.query.email;
+
   if (!email)
     return next({
       log: `userController.getUserInfo ERROR: email missing from req body`,
@@ -28,6 +30,7 @@ userController.getUserInfo = async (req, res, next) => {
     }
     */
     console.log('leaving userController.getUserInfo')
+
     return next();
   } catch {
     return next({
@@ -66,7 +69,9 @@ userController.createUser = async (req, res, next) => {
         err: `userController.createUser ERROR: ${err}`,
       },
     });
+
   }
+  return next();
 };
 
 userController.updateUser = async (req, res, next) => {
@@ -181,4 +186,38 @@ userController.addToken = async (req, res, next) => {
     });
   }
 };
+
+userController.getCurrentUser = async (req, res, next) => {
+  try {
+    const currentUser = await CurrentUser.findOne({});
+    res.locals.currentUser = currentUser;
+    return next();
+  } catch {
+    return next({
+      log: `userController.getUserInfo ERROR: trouble getting user data from database`,
+      message: {
+        err: 'userController.getUserInfo: ERROR: trouble getting user data from database',
+      },
+    });
+  }
+};
+
+userController.setUser = async (req, res, next) => {
+  try {
+    const currentUser = await CurrentUser.findOneAndUpdate(
+      {},
+      { email: res.locals.email, username: res.locals.username }
+    );
+    res.locals.currentUser = currentUser;
+    return next();
+  } catch {
+    return next({
+      log: `userController.getUserInfo ERROR: trouble setting user`,
+      message: {
+        err: 'userController.getUserInfo: ERROR: trouble setting user',
+      },
+    });
+  }
+};
+
 module.exports = userController;

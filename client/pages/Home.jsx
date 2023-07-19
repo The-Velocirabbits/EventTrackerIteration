@@ -14,12 +14,14 @@ export default function HomePage() {
   // const location = useLocation();
   const { globalValues } = useContext(ValuesContext);
   const { email, username, access_token } = globalValues;
+
   const [userData, setUserData] = useState({});
   const [artists, setArtists] = useState(['ye']);
   const [genres, setGenres] = useState(['genre']);
 
   // console.log('email: ', email);
   // console.log(typeof email);
+
 
   useEffect(() => {
     console.log('Global Values: ', globalValues)
@@ -41,6 +43,7 @@ export default function HomePage() {
       }
     };
     fetchingArtists();
+
 
     const fetchingGenres = async () => {
       try {
@@ -65,6 +68,7 @@ export default function HomePage() {
   // console.log(location.state);
   // console.log(artist)
   // console.log(genres);
+
   return (
     <div className="homePage">
       <div className="breadcrumb">
@@ -84,11 +88,13 @@ export default function HomePage() {
       </div>
       <div className="home"> {`Welcome, ${username}!`}</div>
 
+
       <div className="showBox">
         <h1>Upcoming Shows In Your Area</h1>
         <div className="artistShows">
           <h2>Artist Shows</h2>
           {artists ? artists.map((artist) => (
+
             <Card key={artist.artist} className="card">
               <CardContent>
                 <Typography variant="h5" component="h3">
@@ -114,6 +120,7 @@ export default function HomePage() {
         <div className="genreShows">
           <h2>Genre Shows</h2>
           {genres ? genres.map((genre) => (
+
             <Card key={genre.artist} className="card">
               <CardContent>
                 <Typography variant="h5" component="h3">
