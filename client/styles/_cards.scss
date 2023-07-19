@@ -1,0 +1,60 @@
+
+
+
+
+.card {
+  display: flex;
+  flex: 1 0 300px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  text-align: left;
+  position: relative;
+  align-items: center;
+  width: 100%;
+  margin-top: 4px;
+  margin-right: 1px;
+  margin-left: 1px;
+  border-radius: 5px;
+  padding: 0px 10px 5px 10px;
+  margin-bottom: 10px;
+  background-color: rgba(226, 226, 226, 0.872);
+  border: 1px solid #ccc;
+}
+.genreShows {
+    margin-top: 10px;
+    max-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    overflow: auto;
+    text-align: justify;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding-right: 50px;
+  }
+
+.artistShows {
+  margin-top: 10px;
+  display: flex;
+  max-height: 200px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  overflow: auto;
+  text-align: justify;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding-right: 50px;
+}

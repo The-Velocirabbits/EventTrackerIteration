@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext } from 'react';
-import '../styles.css';
 import { useNavigate } from 'react-router-dom';
 import { ValuesContext } from '../pages/Contexts';
 
@@ -30,7 +29,7 @@ export default function Callback() {
 
         //~ set global value to have updated access_token
         //TODO: set it to have updated email
-        setGlobalValues({access_token:access_token, email:'nacho.cheese999@gmail.com', username: 'currymonstanacho'})
+        setGlobalValues({access_token:access_token, email:'jhogue786@gmail.com', username: 'Hogue'})
 
         //~ use access token to get profile data
         const headers = { 'Authorization': `Bearer ${access_token}` }

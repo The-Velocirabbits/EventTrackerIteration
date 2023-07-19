@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ValuesContext } from './pages/Contexts';
-
-
-import styles from './styles.css';
 //import all pages
 import Home from './pages/Home.jsx';
 import Signin from './pages/Signin.jsx';

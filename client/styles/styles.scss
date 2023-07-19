@@ -1,7 +1,14 @@
 /* EDITSSSS */
+
+
+@import '_cards';
+@import '_pref';
+@import '_signUp';
+
 * {
   background-color: black;
 }
+
 .breadcrumb {
   display: flex;
   flex-direction: row;
@@ -39,6 +46,7 @@ button {
   border-radius: 5px;
   outline: rgb(62, 202, 62);
 }
+
 input:hover,
 button:hover {
   cursor: pointer;
@@ -62,18 +70,6 @@ body {
   width: 100%;
 }
 
-.preferencesPage {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.preferences {
-  display: flex;
-  flex-wrap: wrap;
-  width: 90%;
-}
-
 .userInfo {
   display: flex;
   flex-direction: row;
@@ -85,6 +81,7 @@ body {
   border-radius: 5px;
   margin-bottom: 20px;
 }
+
 .updateLocation {
   display: flex;
   flex-direction: column;
@@ -106,12 +103,14 @@ body {
   color: rgb(243, 240, 240);
   border-color: rgb(4, 172, 4);
 }
+
 .music {
   display: flex;
   flex-direction: row;
   flex-grow: 1;
   flex-shrink: 1;
 }
+
 .add {
   display: flex;
   flex-direction: column;
@@ -136,69 +135,17 @@ body {
 
 .artistList,
 .genreList {
-  max-height: 150px;
+  height: 250px;
   overflow: auto;
   text-align: justify;
   border: 1px solid #ccc;
   border-radius: 5px;
   padding-right: 50px;
-}
-
-.signinPage {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-top: 50px;
-  margin-left: auto;
-  margin-right: auto;
-  align-items: center;
-  text-align: center;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 50px;
-  width: 50%;
-}
-
-.signinPage h1 {
-  color: rgb(213, 213, 213);
-}
-
-.signinPage button {
-  border-color: rgb(4, 172, 4);
-}
-
-.signupPage {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.signupPage h1 {
-  color: rgb(236, 235, 235);
-}
-.signup {
-  display: flex;
-  flex-wrap: wrap;
-  width: 90%;
-}
-
-#signupinfo {
-  margin-top: 50px;
-  display: flex;
-  flex-direction: column;
-  width: 50%;
-  margin-left: auto;
-  margin-right: auto;
-  align-items: center;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 40px;
 }
 
 .showBox {
   margin-top: 10px;
+  height: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -210,59 +157,3 @@ body {
   margin-bottom: 20px;
 }
 
-.artistShows {
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 90%;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  max-height: 150px;
-  overflow: auto;
-  text-align: justify;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding-right: 50px;
-}
-.genreShows {
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 90%;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  max-height: 150px;
-  overflow: auto;
-  text-align: justify;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding-right: 50px;
-}
-
-.card {
-  display: flex;
-  flex: 1 0 300px;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  text-align: left;
-  position: relative;
-  align-items: center;
-  width: 100%;
-  margin-top: 4px;
-  margin-right: 1px;
-  margin-left: 1px;
-  border-radius: 5px;
-  padding: 0px 10px 5px 10px;
-  margin-bottom: 10px;
-  background-color: rgba(226, 226, 226, 0.872);
-  border: 1px solid #ccc;
-}

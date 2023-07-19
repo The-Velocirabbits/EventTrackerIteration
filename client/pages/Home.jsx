@@ -83,59 +83,63 @@ export default function HomePage() {
         </Breadcrumbs>
       </div>
       <div className="home"> {`Welcome, ${username}!`}</div>
-
+    
       <div className="showBox">
         <h1>Upcoming Shows In Your Area</h1>
-        <div className="artistShows">
-          <h2>Artist Shows</h2>
-          {artists ? artists.map((artist) => (
-            <Card key={artist.artist} className="card">
-              <CardContent>
-                <Typography variant="h5" component="h3">
-                  {artist.artist}
-                </Typography>
-                <Typography variant="body1" component="p">
-                  Genre: {artist.genre}
-                </Typography>
-                <Typography variant="body1" component="p">
-                  Date: {artist.date}
-                </Typography>
-                <Typography variant="body1" component="p">
-                  Location: {artist.venue}
-                </Typography>
-                <Typography variant="body1" component="p">
-                  Price: {artist.price}
-                </Typography>
-              </CardContent>
-            </Card>
-          )): 'No artists'}
-        </div>
-
-        <div className="genreShows">
-          <h2>Genre Shows</h2>
-          {genres ? genres.map((genre) => (
-            <Card key={genre.artist} className="card">
-              <CardContent>
-                <Typography variant="h5" component="h3">
-                  {genre.artist}
-                </Typography>
-                <Typography variant="body1" component="p">
-                  Genre: {genre.genre}
-                </Typography>
-                <Typography variant="body1" component="p">
-                  Date: {genre.date}
-                </Typography>
-                <Typography variant="body1" component="p">
-                  Location: {genre.venue}
-                </Typography>
-                <Typography variant="body1" component="p">
-                  Price: {genre.price}
-                </Typography>
-              </CardContent>
-            </Card>
-          )): 'No Genres'}
-        </div>
       </div>
     </div>
   );
 }
+
+
+
+
+// <div className="artistShows">
+// <h2>Artist Shows</h2>
+// {artists ? artists.map((artist) => (
+//   <Card key={artist.artist} color='whie' className="card">
+//     <CardContent>
+//       <Typography variant="h5" component="h3">
+//         {artist.artist}
+//       </Typography>
+//       <Typography variant="body1" component="p">
+//         Genre: {artist.genre}
+//       </Typography>
+//       <Typography variant="body1" component="p">
+//         Date: {artist.date}
+//       </Typography>
+//       <Typography variant="body1" component="p">
+//         Location: {artist.venue}
+//       </Typography>
+//       <Typography variant="body1" component="p">
+//         Price: {artist.price}
+//       </Typography>
+//     </CardContent>
+//   </Card>
+// )) : 'No artists'}
+// </div>
+
+// <div className="genreShows">
+// <h2>Genre Shows</h2>
+// {genres ? genres.map((genre) => (
+//   <Card variant="outlined" key={genre.artist} className="card">
+//     <CardContent>
+//       <Typography variant="h5" component="h3" color="text.secondary">
+//         {genre.artist}
+//       </Typography>
+//       <Typography variant="body1" component="p">
+//         Genre: {genre.genre}
+//       </Typography>
+//       <Typography variant="body1" component="p">
+//         Date: {genre.date}
+//       </Typography>
+//       <Typography variant="body1" component="p">
+//         Location: {genre.venue}
+//       </Typography>
+//       <Typography variant="body1" component="p">
+//         Price: {genre.price}
+//       </Typography>
+//     </CardContent>
+//   </Card>
+// )) : 'No Genres'}
+// </div>
