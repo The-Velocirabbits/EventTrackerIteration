@@ -34,15 +34,6 @@ export default function Preference() {
         console.log('data: ',data)
         console.log(data.location.city)
         console.log(data.location.state)
-        /*
-         user document
-        // {
-        // email
-        // location: {city:, state:}
-        // artists:[1,2,3]
-        // genres: [a,b,c]
-        // }
-        */
         setUserData(data);
         setCurrLocation({city: data.location.city, state: data.location.state})
         setCurrArtists(data.artists);
