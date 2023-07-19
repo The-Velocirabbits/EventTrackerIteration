@@ -1,0 +1,147 @@
+/* EDITSSSS */
+
+
+// @import '_cards';
+@import '_pref';
+@import '_signUp';
+@import '_variables';
+@import '_home';
+
+
+* {
+  background-color: black;
+}
+
+.breadcrumb {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  color: #b9b7b7;
+}
+
+.breadcrumb a {
+  color: #898888;
+}
+
+a,
+li,
+body,
+button,
+input,
+select,
+textarea {
+  font-family: CircularSp, CircularSp-Arab, CircularSp-Hebr, CircularSp-Cyrl,
+    CircularSp-Grek, CircularSp-Deva, var(--fallback-fonts, sans-serif),
+    sans-serif;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
+  color: #b3b3b3;
+  text-transform: none;
+}
+
+input,
+button {
+  border: 1px solid #585858;
+  padding: 5px;
+  border-radius: 5px;
+  outline: rgb(62, 202, 62);
+}
+
+input:hover,
+button:hover {
+  cursor: pointer;
+}
+
+body {
+  // line-height: 1.6;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-overflow-style: none;
+  // display: -webkit-box;
+  // display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  height: 98vh;
+  // line-height: normal;
+  // min-height: 600px;
+  // min-width: 800px;
+  scrollbar-width: none;
+  width: 95%;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.updateLocation {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 0px;
+}
+
+.basicInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  align-items: left;
+  width: 40%;
+  padding: 20px;
+  margin-bottom: 20px;
+  color: rgb(243, 240, 240);
+  border-color: rgb(4, 172, 4);
+}
+
+.music {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.add {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 20px;
+  width: 80%;
+  margin-bottom: 20px;
+}
+
+.current {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  margin-left: 25px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding-right: 50px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.artistList,
+.genreList {
+  height: 250px;
+  overflow: auto;
+  text-align: justify;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding-right: 50px;
+}
