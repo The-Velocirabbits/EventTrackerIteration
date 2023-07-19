@@ -16,7 +16,7 @@ export default function Preference() {
   const [currArtists, setCurrArtists] = useState([]);
   const [newGenre, setNewGenre] = useState('');
   const [currGenres, setCurrGenres] = useState([]);
-  const [currLocation, setCurrLocation] = useState({city:'', state:''})
+  const [currLocation, setCurrLocation] = useState({ city: '', state: '' })
 
   useEffect(() => {
     const fetchingData = async () => {
@@ -31,84 +31,38 @@ export default function Preference() {
           }
         );
         const data = await response.json();
-        console.log('data: ',data)
+        console.log('data: ', data)
         console.log(data.location.city)
         console.log(data.location.state)
         setUserData(data);
-        setCurrLocation({city: data.location.city, state: data.location.state})
+        setCurrLocation({ city: data.location.city, state: data.location.state })
         setCurrArtists(data.artists);
         setCurrGenres(data.genres);
-      } catch (err) {
+      }
+      catch (err) {
         throw new Error('error with currentUserInfo: ', err);
       }
-
-      //   // fetch current user email
-      //   const response = await fetch(`/api/user?email=${username}`, {
-      //     method: 'POST',
-      //     headers: { 'Content-Type': 'application/json' },
-      //     body: JSON.stringify({ email:email }),
-      //   });
-      //   const currentUser = await response.json();
-      //   console.log('currentUser: ', currentUser);
-      //   /* fetches data of current user
-      //     {
-      //       email: email
-      //       accessToken: accesToken
-      //     }
-      //     */
-      //   currentUserInfo(currentUser);
-      // } catch {
-      //   throw new Error('Error with initial fetch request!');
-      // }
-    };
-
-    // fetch current user's info stored in their user document
-    // const currentUserInfo = async (currentUser) => {
-    //   const email = currentUser.email;
-    //   try {
-    //     const response = await fetch(
-    //       `/api/preferences?email=${encodeURIComponent(email)}`,
-    //       {
-    //         method: 'GET',
-    //         headers: { 'Content-Type': 'application/json' },
-    //       }
-    //     );
-    //     const data = await response.json();
-    //     /*
-    //      user document
-    //     // {
-    //     // email
-    //     // location: {city:, state:}
-    //     // artists:[1,2,3]
-    //     // genres: [a,b,c]
-    //     // }
-    //     */
-    //     setUserData(data);
-    //     setCurrArtists(data.artists);
-    //     setCurrGenres(data.genres);
-    //   } catch (err) {
-    //     throw new Error('error with currentUserInfo: ', err);
-    //   }
-    // };
-
+    }
     fetchingData();
-  }, [location]);
+  }, []);
 
   //changing state's state
   const handleChangeCity = (e) => {
     const newCity = e.target.value;
-    setUserData((curr) => ({
-      ...curr,
-      city: newCity,
-    }));
+    setCurrLocation((prevLocation) => ({ ...prevLocation, city: newCity }))
+    // setUserData((curr) => ({
+    //   ...curr,
+    //   city: newCity,
+    // }));
   };
   //changing city's state
   const handleChangeState = (e) => {
     const newState = e.target.value;
-    setUserData((curr) => ({
-      ...curr,
-      state: newState,
-    }));
+    setCurrLocation((prevLocation) => ({ ...prevLocation, state: newState }))
+    // setUserData((curr) => ({
+    //   ...curr,
+    //   state: newState,
+    // }));
   };
   //sending PATCH request with updated state
   const handleLocation = async (e) => {
@@ -116,7 +70,7 @@ export default function Preference() {
     try {
       const toUpdate = {
         email: userData.email,
-        location: { city: currLocation.city, state: currLocation.location.state },
+        location: { city: currLocation.city, state: currLocation.state },
         // location: { city: userData.location.city, state: userData.location.state },
       };
       await fetch(
@@ -201,7 +155,7 @@ export default function Preference() {
   console.log('currGenres: ', currGenres)
   // setCurrGenres([])
   // console.log('locations1', userData.locations)
-  console.log('locations2: ',  currLocation)
+  console.log('locations2: ', currLocation)
 
   return (
     <div className="preferencesPage">

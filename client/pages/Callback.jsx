@@ -29,7 +29,7 @@ export default function Callback() {
 
         //~ set global value to have updated access_token
         //TODO: set it to have updated email
-        setGlobalValues({access_token:access_token, email:'jhogue786@gmail.com', username: 'Hogue'})
+        setGlobalValues({access_token:access_token, email:'nacho.cheese999@gmail.com', username: 'currymonstanacho'})
 
         //~ use access token to get profile data
         const headers = { 'Authorization': `Bearer ${access_token}` }
