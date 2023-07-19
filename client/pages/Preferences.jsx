@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../styles.css';
+// import '../styles.css';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Card, CardContent, Typography, Breadcrumbs } from '@mui/material';
 

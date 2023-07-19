@@ -13,44 +13,6 @@ export default function Callback() {
   // const [fetched, setFetched] = useState(false);
   const navigate = useNavigate();
   const { setGlobalValues } = useContext(ValuesContext);
-  
-
-  // // const routeChange = (path) =>{
-  // //     navigate(path);
-  // // }
-
-  // // get the redirect url path (this includes the code query we will need to send to spotify to retrieve user specific tokens)
-  // const href = window.location.href;
-  // console.log('href: ', href)
-  // const index = href.indexOf('callback');
-  // const path = '/api/authentication/' + href.slice(index);
-  // console.log('path: ', path);
-
-  // // use code in request query to get access and refresh tokens from spotify
-  // const getTokens = async () => {
-  //   try {
-  //     const response = await fetch(path, {
-  //       method: 'GET',
-  //       headers: {
-  //         'Content-Type': 'Application/JSON',
-  //       },
-  //     });
-  //     //   const initiateAuth = await response.status;
-  //     console.log('getTokens fetch response: ', response);
-  //     const accessToken = await response.json();
-  //     // if (response.status === 200) {
-  //     // }
-  //     console.log('access Token:', accessToken);
-  //     console.log(typeof accessToken);
-  //     return checkUserType(accessToken);
-  //   } catch (err) {
-  //     return console.log(
-  //       'error making fetch request to server to retrieve spotify tokens: ',
-  //       err
-  //     );
-  //   }
-  // };
-
 
 
   useEffect(() => {
@@ -95,12 +57,6 @@ export default function Callback() {
     getData()
 
   }, []);
-
-
-
-  function updateProgres() {
-
-  }
 
   return (
     <div className="signinPage">

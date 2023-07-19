@@ -158,7 +158,7 @@ userController.addToken = async (req, res, next) => {
   console.log('entering addToken');
   console.log('LOOK HERE: ', res.locals)
   const accessToken = req.body.accessToken;
-  const email = res.locals.userEmail;
+  const email = res.locals.email;
   const username = res.locals.username;
   let exists = false;
   try {

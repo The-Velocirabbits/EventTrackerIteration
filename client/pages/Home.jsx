@@ -1,21 +1,26 @@
 import React, { useEffect, useState, useContext } from 'react';
-import '../styles.css';
+// import '../styles.css';
 import { Link, useLocation } from 'react-router-dom';
 import { Card, CardContent, Typography, Breadcrumbs } from '@mui/material';
 import { ValuesContext } from '../pages/Contexts';
 
+// import '@fontsource/roboto/300.css';
+// import '@fontsource/roboto/400.css';
+// import '@fontsource/roboto/500.css';
+// import '@fontsource/roboto/700.css'; //added font import
+
 
 export default function HomePage() {
-  const location = useLocation();
+  // const location = useLocation();
   const { globalValues } = useContext(ValuesContext);
   const { email, username, access_token } = globalValues;
   const [userData, setUserData] = useState({});
-  const [artists, setArtists] = useState([]);
-  const [genres, setGenres] = useState([]);
+  const [artists, setArtists] = useState(['ye']);
+  const [genres, setGenres] = useState(['genre']);
 
   // console.log('email: ', email);
   // console.log(typeof email);
-  //`/api/home/artist?email=${encodeURIComponent(email)}`
+
   useEffect(() => {
     console.log('Global Values: ', globalValues)
     const fetchingArtists = async () => {
@@ -28,22 +33,9 @@ export default function HomePage() {
           }
         );
         const artists = await response.json();
-        // {
-        // artistShows:[
-        // {
-        // artist: ,
-        // genre: ,
-        // price: ,
-        // date: ,
-        // venue: ,
-        // eventUrl: ,
-        // imgUrl:
-        // },{},{}]
-        // }
-        console.log('artists: ', artists)
+        console.log(artists)
         // setArtists(artists.artistShows);
-        setArtists(artists)
-
+        setArtists(artists);
       } catch (err) {
         throw new Error('Error with artist fetch request!', err);
       }
@@ -60,27 +52,19 @@ export default function HomePage() {
           }
         );
         const genres = await response.json();
-        // {
-        // artistShows:[
-        // {
-        // artist: ,
-        // genre: ,
-        // price: ,
-        // date: ,
-        // venue: ,
-        // eventUrl: ,
-        // imgUrl:
-        // },{},{}]
-        // }
-        // const returned = genres.artistShows.slice(0, 30);
-        setGenres('genres: ', genres);
+        console.log(genres);
+        const returned = genres.slice(0, 30);
+        console.log(returned);
+        setGenres(returned);
       } catch (err) {
         throw new Error('Error with genre fetch request!', err);
       }
     };
     fetchingGenres();
-  }, []);
-
+  }, []); //added empty array
+  // console.log(location.state);
+  // console.log(artist)
+  // console.log(genres);
   return (
     <div className="homePage">
       <div className="breadcrumb">
@@ -103,8 +87,8 @@ export default function HomePage() {
       <div className="showBox">
         <h1>Upcoming Shows In Your Area</h1>
         <div className="artistShows">
-          <h2>{}Artist Shows</h2>
-          {artists? artists.forEach((artist) => (
+          <h2>Artist Shows</h2>
+          {artists ? artists.map((artist) => (
             <Card key={artist.artist} className="card">
               <CardContent>
                 <Typography variant="h5" component="h3">
@@ -129,7 +113,7 @@ export default function HomePage() {
 
         <div className="genreShows">
           <h2>Genre Shows</h2>
-          {genres ? genres.forEach((genre) => (
+          {genres ? genres.map((genre) => (
             <Card key={genre.artist} className="card">
               <CardContent>
                 <Typography variant="h5" component="h3">
