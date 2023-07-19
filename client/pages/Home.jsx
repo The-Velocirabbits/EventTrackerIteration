@@ -72,13 +72,13 @@ export default function HomePage() {
         // imgUrl:
         // },{},{}]
         // }
-        const returned = genres.artistShows.slice(0, 30);
-        setGenres(returned);
+        // const returned = genres.artistShows.slice(0, 30);
+        setGenres('genres: ', genres);
       } catch (err) {
         throw new Error('Error with genre fetch request!', err);
       }
     };
-    //fetchingGenres();
+    fetchingGenres();
   }, []);
 
   return (
@@ -103,7 +103,7 @@ export default function HomePage() {
       <div className="showBox">
         <h1>Upcoming Shows In Your Area</h1>
         <div className="artistShows">
-          <h2>{`Artist Shows ${artists.artist}`}</h2>
+          <h2>{}Artist Shows</h2>
           {artists? artists.forEach((artist) => (
             <Card key={artist.artist} className="card">
               <CardContent>
