@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../styles.css';
+// import '../styles.css';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 export default function Signup() {

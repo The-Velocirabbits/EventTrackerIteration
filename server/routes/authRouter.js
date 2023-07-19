@@ -21,13 +21,10 @@ router.get(
   authController.checkState,
   authController.getTokens,
   (req, res) => {
-    console.log('acces token: ', res.locals.accessToken);
-    console.log('refresh token: ', res.locals.refreshToken);
-    console.log(
-      'options to pass into spotify api requests: ',
-      res.locals.options
-    );
-    return res.status(200).json(res.locals.accessToken);
+    console.log('finished processing')
+    console.log('access token: ', res.locals.access_token);
+    console.log('refresh token: ', res.locals.refresh_token);
+    return res.status(200).json(res.locals.access_token);
   }
 );
 

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { mongoDB } = require('./secrets.js');
 
 // Used MongoDB
-const MONGO_URI = `mongodb+srv://${mongoDB.username}:${mongoDB.password}@eventtracker.y68qhgj.mongodb.net/?retryWrites=true&w=majority`;
+const MONGO_URI = `mongodb+srv://${mongoDB.username}:${mongoDB.password}@eventtrackerdb.5waxbzz.mongodb.net/?retryWrites=true&w=majority`;
 
 mongoose
   .connect(MONGO_URI, {
@@ -10,7 +10,7 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
     // sets the name of the DB that our collections are part of
-    dbName: 'EventTracker',
+    dbName: 'EventTrackerDB',
   })
   .then(() => console.log('Connected to Mongo DB.'))
   .catch((err) => console.log(err));

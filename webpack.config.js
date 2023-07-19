@@ -47,6 +47,7 @@ module.exports = {
     // we want our bundle.js file to be loaded into an HTMl file
     new HtmlWebpackPlugin({
       //where to inject the bundle.js file
+      inject: false,
       template: path.resolve('./client/index.html'),
     }),
     // generates a manifest.json file
@@ -57,7 +58,8 @@ module.exports = {
   devServer: {
     host: 'localhost',
     port: 8080,
-    hot: true,
+    hot: false,
+    liveReload: false,
     historyApiFallback: true,
     static: {
       // what the public sees so they dont know the path

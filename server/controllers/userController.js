@@ -5,10 +5,9 @@ const userController = {};
 
 //fetching user document from 'Users' collection in database
 userController.getUserInfo = async (req, res, next) => {
-  let email;
-  if (req.query.email) email = req.query.email;
-  if (!email) email = res.locals.email;
-  let exists = false;
+  console.log('inside userController.getUserInfo')
+  const email = req.query.email;
+
   if (!email)
     return next({
       log: `userController.getUserInfo ERROR: email missing from req body`,
@@ -30,9 +29,8 @@ userController.getUserInfo = async (req, res, next) => {
     genres: [Genre1, Genre2, Genre3]
     }
     */
-    res.locals.accessToken = userInfo.accessToken;
-    if (userInfo) exists = true;
-    res.locals.exists = exists;
+    console.log('leaving userController.getUserInfo')
+
     return next();
   } catch {
     return next({
@@ -45,39 +43,40 @@ userController.getUserInfo = async (req, res, next) => {
 };
 
 userController.createUser = async (req, res, next) => {
-  const email = res.locals.email;
-  const username = res.locals.username;
-  const accessToken = req.body.accessToken;
-  const exists = res.locals.exists;
-  if (!exists) {
-    if (!email || !username || !accessToken)
-      return next({
-        log: `userController.createUser ERROR: missing email or location on req body`,
-        message: {
-          err: 'userController.createUser: ERROR: missing email or location on req body',
-        },
-      });
-    try {
-      const newUser = await Users.create({
-        email,
-        accessToken,
-        username,
-      });
-      res.locals.newUser = newUser;
-      return next();
-    } catch (err) {
-      return next({
-        log: `userController.createUser ERROR: trouble creating new user`,
-        message: {
-          err: `userController.createUser ERROR: ${err}`,
-        },
-      });
-    }
+  console.log('inside  userController.createUser')
+  const { email, city, state, accessToken, username } = req.body;
+  if (!email || !city || !state || !username || !accessToken)
+    return next({
+      log: `userController.createUser ERROR: missing email or location on req body`,
+      message: {
+        err: 'userController.createUser: ERROR: missing email or location on req body',
+      },
+    });
+  try {
+    const newUser = await Users.create({
+      email,
+      accessToken,
+      username,
+      location: { city, state },
+    });
+    res.locals.newUser = newUser;
+    console.log('leaving userController.createUser')
+    return next();
+  } catch (err) {
+    return next({
+      log: `userController.createUser ERROR: trouble creating new user`,
+      message: {
+        err: `userController.createUser ERROR: ${err}`,
+      },
+    });
+
   }
   return next();
 };
 
 userController.updateUser = async (req, res, next) => {
+  console.log('inside  userController.updateUser')
+
   const email = req.query.email;
   const { artists, genres, location } = req.body;
   console.log(artists);
@@ -110,13 +109,13 @@ userController.updateUser = async (req, res, next) => {
     if (genres) {
       const updatedUser = await Users.findOneAndUpdate(
         { email: email },
-        { genres: genres },
+        { $push: { genres: genres } },
         { new: true }
       );
       res.locals.updatedUser = updatedUser;
     }
     console.log(res.locals.updatedUser);
-
+    console.log('leaving  userController.updateUser')
     return next();
   } catch (err) {
     return next({
@@ -129,6 +128,7 @@ userController.updateUser = async (req, res, next) => {
 };
 //initially updates users prefered artists
 userController.updateUserSpotify = async (req, res, next) => {
+  console.log('inside  userController.updateUserSpotify')
   const email = res.locals.email;
   const artists = res.locals.spotifyArtists;
   if (!artists || !email)
@@ -146,6 +146,7 @@ userController.updateUserSpotify = async (req, res, next) => {
       { new: true }
     );
     res.locals.updatedUserSpotify = updatedUserSpotify;
+    console.log('leaving userController.updateUserSpotify')
     return next();
   } catch (err) {
     return next({
@@ -160,10 +161,11 @@ userController.updateUserSpotify = async (req, res, next) => {
 //add middleware to send access token to database
 userController.addToken = async (req, res, next) => {
   console.log('entering addToken');
+  console.log('LOOK HERE: ', res.locals)
   const accessToken = req.body.accessToken;
-  const email = res.locals.userEmail;
+  const email = res.locals.email;
   const username = res.locals.username;
-  const exists = false;
+  let exists = false;
   try {
     const userDoc = await Users.findOneAndUpdate(
       { email: email },

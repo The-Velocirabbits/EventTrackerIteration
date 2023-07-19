@@ -1,101 +1,73 @@
-import React, { useEffect, useState } from 'react';
-import '../styles.css';
+import React, { useEffect, useState, useContext } from 'react';
+// import '../styles.css';
 import { Link, useLocation } from 'react-router-dom';
 import { Card, CardContent, Typography, Breadcrumbs } from '@mui/material';
+import { ValuesContext } from '../pages/Contexts';
+
+// import '@fontsource/roboto/300.css';
+// import '@fontsource/roboto/400.css';
+// import '@fontsource/roboto/500.css';
+// import '@fontsource/roboto/700.css'; //added font import
+
 
 export default function HomePage() {
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
+  // const location = useLocation();
+  const { globalValues } = useContext(ValuesContext);
+  const { email, username, access_token } = globalValues;
+
   const [userData, setUserData] = useState({});
-  const [artists, setArtists] = useState([]);
-  const [genres, setGenres] = useState([]);
+  const [artists, setArtists] = useState(['ye']);
+  const [genres, setGenres] = useState(['genre']);
 
-  console.log('email: ', email);
-  console.log(typeof email);
-  useEffect(() => {
-    const fetchingData = async () => {
-      try {
-        // const {email} = location.state
-        const response = await fetch(`/api/user}`, {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        });
-        const data = await response.json();
-        console.log(data);
-        /*
-          {
-            currentUser: email
-          }
-          */
-        setUsername(data.username);
-        setEmail(data.email);
-      } catch {
-        throw new Error('Error with initial fetch request!');
-      }
-    };
-    fetchingData();
-  }, []);
+  // console.log('email: ', email);
+  // console.log(typeof email);
+
 
   useEffect(() => {
+    console.log('Global Values: ', globalValues)
     const fetchingArtists = async () => {
       try {
         const response = await fetch(
-          `/api/home/artist?email=${encodeURIComponent(email)}`,
+          `/api/home/artist?email=${email}`,
           {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
           }
         );
         const artists = await response.json();
-        // {
-        // artistShows:[
-        // {
-        // artist: ,
-        // genre: ,
-        // price: ,
-        // date: ,
-        // venue: ,
-        // eventUrl: ,
-        // imgUrl:
-        // },{},{}]
-        // }
-        setArtists(artists.artistShows);
+        console.log(artists)
+        // setArtists(artists.artistShows);
+        setArtists(artists);
       } catch (err) {
         throw new Error('Error with artist fetch request!', err);
       }
     };
+    fetchingArtists();
+
 
     const fetchingGenres = async () => {
       try {
         const response = await fetch(
-          `/api/home/genre?email=${encodeURIComponent(email)}`,
+          `/api/home/genre?email=${email}`,
           {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' },
           }
         );
         const genres = await response.json();
-        // {
-        // artistShows:[
-        // {
-        // artist: ,
-        // genre: ,
-        // price: ,
-        // date: ,
-        // venue: ,
-        // eventUrl: ,
-        // imgUrl:
-        // },{},{}]
-        // }
-        const returned = genres.artistShows.slice(0, 30);
+        console.log(genres);
+        const returned = genres.slice(0, 30);
+        console.log(returned);
         setGenres(returned);
       } catch (err) {
         throw new Error('Error with genre fetch request!', err);
       }
     };
-    fetchingArtists();
     fetchingGenres();
-  }, [email]);
+  }, []); //added empty array
+  // console.log(location.state);
+  // console.log(artist)
+  // console.log(genres);
 
   return (
     <div className="homePage">
@@ -104,16 +76,25 @@ export default function HomePage() {
           <p color="text.primary" className="breadcrumbs">
             HOME PAGE
           </p>
-          <Link to="/preferences">PREFERENCES</Link>
+          <Link
+            underline="hover"
+            color="inherit"
+            to="/preferences"
+            state={{ email, username, access_token }}
+          >
+            PREFERENCES
+          </Link>
         </Breadcrumbs>
       </div>
-      <div className="home"> Welcome!</div>
+      <div className="home"> {`Welcome, ${username}!`}</div>
+
 
       <div className="showBox">
         <h1>Upcoming Shows In Your Area</h1>
         <div className="artistShows">
           <h2>Artist Shows</h2>
-          {artists.map((artist) => (
+          {artists ? artists.map((artist) => (
+
             <Card key={artist.artist} className="card">
               <CardContent>
                 <Typography variant="h5" component="h3">
@@ -133,12 +114,13 @@ export default function HomePage() {
                 </Typography>
               </CardContent>
             </Card>
-          ))}
+          )): 'No artists'}
         </div>
 
         <div className="genreShows">
           <h2>Genre Shows</h2>
-          {genres.map((genre) => (
+          {genres ? genres.map((genre) => (
+
             <Card key={genre.artist} className="card">
               <CardContent>
                 <Typography variant="h5" component="h3">
@@ -158,7 +140,7 @@ export default function HomePage() {
                 </Typography>
               </CardContent>
             </Card>
-          ))}
+          )): 'No Genres'}
         </div>
       </div>
     </div>
