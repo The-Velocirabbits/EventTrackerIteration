@@ -22,7 +22,7 @@ seatGeekController.getArtistEvents = async (req, res, next) => {
       .slice(0, 10);
 
     //itterating through each artist in array and fetching Event data
-    for (i = 0; i < artists.length; i++) {
+    for (let i = 0; i < artists.length; i++) {
       /*fetch to seatgeek API 
       query based on City, Artist, and date range of 3 Months
       */
@@ -87,7 +87,7 @@ seatGeekController.getGenreEvents = async (req, res, next) => {
       events.forEach((el) => {
         const event = {
           artist: el.performers[0].name,
-          genre: genre,
+          genre: genre[i],
           price: el.stats.lowest_price,
           date: el.datetime_local,
           venue: el.venue.name,
