@@ -248,7 +248,8 @@ export default function Preference() {
               <div className="artistList">
                 <ul>
                   {currArtists.map((artist, i) => (
-                    <li key={i}>{artist}</li>
+                    // <div key={i}>{artist} <button>X</button> </div>
+                    <li key={i}>{artist}<button>X</button> </li>
                   ))}
                 </ul>
               </div>
@@ -258,7 +259,7 @@ export default function Preference() {
               <div className="genreList">
                 <ul>
                   {currGenres.map((genre, i) => (
-                    <li key={genre + i}>{genre}</li>
+                    <li key={genre + i}>{genre} </li>
                   ))}
                 </ul>
               </div>
