@@ -11,7 +11,6 @@ seatGeekController.getArtistEvents = async (req, res, next) => {
     const eventsArray = [];
     const eventsURLs = new Set();
     const artists = res.locals.userInfo.artists;
-    console.log('artists information: ', artists)
     const city = res.locals.userInfo.location.city;
     const state = res.locals.userInfo.location.state
     //const artists = ['ice-spice', 'all-them-witches', 'clutch'];
@@ -40,10 +39,12 @@ seatGeekController.getArtistEvents = async (req, res, next) => {
       query based on City, Artist, and date range of 3 Months
       */
       const artistString = artists[i].toLowerCase().replaceAll(' ', '-');
+      //TODO: change this
 
       //~ get performers id
       const performerResponse = await fetch(`https://api.seatgeek.com/2/performers?slug=${artistString}&client_id=${seatgeek.client_id}`)
       const performerData = await performerResponse.json()
+      console.log('PERFORMER DATA: ', performerData)
       const performerId = performerData.performers[0].id
       // console.log(performerData)
       // console.log(performerId)
@@ -54,11 +55,11 @@ seatGeekController.getArtistEvents = async (req, res, next) => {
       // `https://api.seatgeek.com/2/events/?client_id=${seatgeek.client_id}&client_secret=${seatgeek.client_secret}&performers.slug=${artistString}&venue.city=${city}&datetime_utc.gte=${today}&datetime_utc.lte=${threeMonths}`
       // console.log('url fetching: ', `https://api.seatgeek.com/2/events/?client_id=${seatgeek.client_id}&client_secret=${seatgeek.client_secret}&performers.slug=${artistString}&venue.city=${city}&datetime_utc.gte=${today}&datetime_utc.lte=${threeMonths}`)
       const { recommendations } = await response.json();
-      console.log(recommendations);
+      // console.log(recommendations);
       //making a separate object for each event returned back for an artist
       //~ put a filter so it is only 10 songs per artist
       for (let i = 0; i < recommendations.length; i++) {
-        console.log(i)
+        // console.log(i)
         el = recommendations[i]
         if (el.event && el.event.performers && el.event.performers.length > 0
           && eventsURLs.has(el.event.url) === false //~ Get URL and check if doesnt exist already in array (prevent duplicates)
@@ -81,9 +82,6 @@ seatGeekController.getArtistEvents = async (req, res, next) => {
         // eventsArray.push(event);
       };
     }
-
-    //TODO: sort by artists that were inputted
-
     //attaching Array of objects to send as response to front end
     res.locals.artistEvents = eventsArray;
     console.log('artist eventsArray length: ', eventsArray.length)
