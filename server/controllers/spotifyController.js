@@ -41,13 +41,28 @@ spotifyController.getAccountInfo = async (req, res, next) => {
         Authorization: 'Bearer ' + accessToken,
       },
     };
+
+    // const response = await fetch('https://api.spotify.com/v1/me', searchParams);
+    // const data = await response.json();
+    // const { email, display_name, images } = data;
+    // res.locals.email = email;
+    // res.locals.username = display_name;
+    // res.locals.profile_pic = (profile.images && profile.images.length > 1) ? images[1].url : ''; 
+    // console.log('getAccountInfo email:', email);
+    // console.log('getAccountInfo username:', display_name);
+    // console.log('getAccountInfo profile_pic:', res.locals.profile_pic);
+
+
+
     const response = await fetch('https://api.spotify.com/v1/me', searchParams);
     const data = await response.json();
-    const { email, display_name } = data;
+    const { email, display_name, images } = data;
     res.locals.email = email;
     res.locals.username = display_name;
+    res.locals.profile_pic = (images && images.length > 1) ? images[1].url : ''; 
     console.log('getAccountInfo email:', email);
     console.log('getAccountInfo username:', display_name);
+    console.log('getAccountInfo profile pic', res.locals.profile_pic);
     return next();
   } catch (err) {
     return next({

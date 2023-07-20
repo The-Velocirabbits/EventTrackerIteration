@@ -35,14 +35,13 @@ router.post(
   spotifyController.getAccountInfo,
   userController.addToken,
   (req, res) => {
-    const email = res.locals.email;
-    const username = res.locals.username;
-    const exists = res.locals.exists;
+    const { email, username, profile_pic, exists} = res.locals
     const responseObj = {
       email: email,
       exists: exists,
       accessToken: req.body.accessToken,
       username: username,
+      profile_pic: profile_pic,
     };
     console.log(res.locals.exists);
     return res.status(200).json(responseObj);
