@@ -6,10 +6,6 @@ import { ValuesContext } from '../pages/Contexts';
 // user is redirected to '/callback' from spotify after entering their credentials
 // if the user's credentials were authenticated, make get request to obtain refresh and access tokens from spotify
 export default function Callback() {
-  //heavy CSS!
-
-  // const [email, setEmail] = useState('');
-  // const [fetched, setFetched] = useState(false);
   const navigate = useNavigate();
   const { setGlobalValues } = useContext(ValuesContext);
 
@@ -29,7 +25,7 @@ export default function Callback() {
 
         //~ set global value to have updated access_token
         //TODO: set it to have updated email
-        setGlobalValues({access_token:access_token, email:'nacho.cheese999@gmail.com', username: 'currymonstanacho'})
+        setGlobalValues({ access_token: access_token, email: 'nacho.cheese999@gmail.com', username: 'currymonstanacho' })
 
         // //~ use access token to get profile data
         const headers = { 'Authorization': `Bearer ${access_token}` }
@@ -47,16 +43,12 @@ export default function Callback() {
 
         //~ add navigation here
         navigate('/home')
-       
       }
       catch (err) {
         console.log(err)
       }
-
     }
-
     getData()
-
   }, []);
 
   return (

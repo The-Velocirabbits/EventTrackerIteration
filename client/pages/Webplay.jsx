@@ -1,0 +1,154 @@
+import React, { useState, useEffect, useContext } from 'react';
+import { ValuesContext } from '../pages/Contexts';
+import { v4 as uuidv4 } from 'uuid';
+
+const track = {
+    name: "",
+    album: {
+        images: [
+            { url: "" }
+        ]
+    },
+    artists: [
+        { name: "" }
+    ]
+}
+
+export default function WebPlayback() {
+    const { globalValues } = useContext(ValuesContext);
+    const { access_token } = globalValues;
+    const [player, setPlayer] = useState(undefined);
+    const [device_id, setDevice_Id] = useState(undefined);
+    const [is_paused, setPaused] = useState(false);
+    const [is_active, setActive] = useState(false);
+    const [current_track, setTrack] = useState(track);
+    const [songs, setSongs] = useState([]);
+
+    const [artistForm, setArtistForm] = useState('');
+
+
+    useEffect(() => {
+        const script = document.createElement("script");
+        script.src = "https://sdk.scdn.co/spotify-player.js";
+        script.async = true;
+        document.body.appendChild(script);
+        window.onSpotifyWebPlaybackSDKReady = () => {
+            const player = new window.Spotify.Player({
+                name: 'Web Playback SDK',
+                getOAuthToken: cb => { cb(access_token); },
+                volume: 0.2
+            });
+            setPlayer(player);
+            player.addListener('ready', ({ device_id }) => {
+                setDevice_Id(device_id);
+                console.log('Ready with Device ID', device_id);
+            });
+            player.addListener('not_ready', ({ device_id }) => {
+                console.log('Device ID has gone offline', device_id);
+            });
+            player.addListener('player_state_changed', (state => {
+                if (!state) {
+                    return;
+                }
+                setTrack(state.track_window.current_track);
+                setPaused(state.paused);
+                player.getCurrentState().then(state => {
+                    (!state) ? setActive(false) : setActive(true)
+                });
+            }));
+            player.connect();
+        };
+
+    }, []);
+
+    useEffect(() => {
+        activatePlayer();
+    }, [device_id])
+
+    async function queue(songId) {
+        try {
+            const url = `https://api.spotify.com/v1/me/player/play`;
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: { 'Authorization': `Bearer ${access_token}` },
+                body: JSON.stringify({
+                    uris: [`spotify:track:${songId}`]
+                })
+            });
+            // const result = await response.json();
+        }
+        catch (err) { console.log(err) }
+    }
+    async function activatePlayer() {
+        try {
+            const url = `https://api.spotify.com/v1/me/player`;
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: { 'Authorization': `Bearer ${access_token}` },
+                body: JSON.stringify({
+                    device_ids: [device_id]
+                })
+            });
+            // const result = await response.json();
+        }
+        catch (err) { console.log(err) }
+    }
+    async function artistSongs(artist) {
+        let artistId = undefined;
+        let songArr = [];
+        try {
+            const url = `https://api.spotify.com/v1/search?q=${artist}&type=artist`;
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${access_token}` },
+            });
+            const result = await response.json();
+            console.log(result.artists.items[0].id);
+            artistId = result.artists.items[0].id;
+        }
+        catch (err) { console.log(err) }
+        if (artistId) {
+            try {
+                const url = `https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=US`;
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${access_token}` },
+                });
+                const result = await response.json();
+                console.log(result);
+                songArr = result.tracks;
+                setSongs(songArr);
+            }
+            catch (err) { console.log(err) }
+        }
+    }
+    const SongList = () => {
+        return (
+            <div>{
+                songs.map((el) => (
+                    <button className="btn-spotify" key={uuidv4()} onClick={() => { queue(el.id) }}>{el.name}</button>
+                ))
+            }</div>
+        )
+    }
+    return (
+        <>
+            <div className="container">
+                <div className="main-wrapper">
+                    <img src={current_track.album.images[0].url} className="now-playing__cover" alt="" />
+                    <div className="now-playing__side">
+                        <div className="now-playing__name">{current_track.name}</div>
+                        <div className="now-playing__artist">{current_track.artists[0].name}</div>
+                    </div>
+                </div>
+                <button className="btn-spotify" onClick={() => { player.previousTrack() }} >&lt;&lt;</button>
+                <button className="btn-spotify" onClick={() => { player.togglePlay() }} >{is_paused ? "PLAY" : "PAUSE"}</button>
+                <button className="btn-spotify" onClick={() => { player.nextTrack() }} >&gt;&gt;</button>
+                <input className="btn-spotify" placeholder='Enter Artist' onChange={(e) => { setArtistForm(e.target.value) }}></input>
+                <button className="btn-spotify" onClick={() => { artistSongs(artistForm) }}>submit</button>
+                {songs ? <SongList /> : <div></div>}
+            </div>
+        </>
+    )
+
+}
