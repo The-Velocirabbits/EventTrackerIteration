@@ -39,19 +39,9 @@ export default function Callback() {
           body: JSON.stringify({ accessToken: access_token })
         });
         const userData = await userInfo.json();
-        let profile_pic = '';
-        console.log(userData);
-        const response2 = await fetch(`https://api.spotify.com/v1/users/${userData.username}`,
-          { headers: headers });
-        const profile = await response2.json();
-        if (profile.images && profile.images.length > 1) {
-          console.log('PROFLIE')
-          console.log(profile);
-          profile_pic = profile.images[1].url;
-        }
 
-         //~ set global value to have updated information
-        setGlobalValues({ access_token: userData.accessToken, email: userData.email, username: userData.username, profile_pic: userData.profile_pic})
+        //~ set global value to have updated information
+        setGlobalValues({ access_token: userData.accessToken, email: userData.email, username: userData.username, profile_pic: userData.profile_pic })
         let redirect = '';
         if (userData.exists === false) {
           redirect = '/signup';

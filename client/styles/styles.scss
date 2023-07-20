@@ -34,7 +34,7 @@ textarea {
     CircularSp-Grek, CircularSp-Deva, var(--fallback-fonts, sans-serif),
     sans-serif;
   border: 0;
-  margin: 0;
+  // margin: 0;
   padding: 0;
   vertical-align: baseline;
   color: #b3b3b3;
@@ -55,6 +55,7 @@ button:hover {
 }
 
 body {
+  margin: 10px;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
   -ms-overflow-style: none;
@@ -99,5 +100,3 @@ body {
   color: rgb(243, 240, 240);
   border-color: rgb(4, 172, 4);
 }
-
-
