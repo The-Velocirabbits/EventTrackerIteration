@@ -102,4 +102,3 @@ export default function Signup() {
     </div>
   );
 }
-//next: Preference Page

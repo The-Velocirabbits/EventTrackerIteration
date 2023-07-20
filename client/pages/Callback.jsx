@@ -6,10 +6,6 @@ import { ValuesContext } from '../pages/Contexts';
 // user is redirected to '/callback' from spotify after entering their credentials
 // if the user's credentials were authenticated, make get request to obtain refresh and access tokens from spotify
 export default function Callback() {
-  //heavy CSS!
-
-  // const [email, setEmail] = useState('');
-  // const [fetched, setFetched] = useState(false);
   const navigate = useNavigate();
   const { setGlobalValues } = useContext(ValuesContext);
 
@@ -65,11 +61,8 @@ export default function Callback() {
       catch (err) {
         console.log(err)
       }
-
     }
-
     getData()
-
   }, []);
 
   return (
