@@ -23,23 +23,8 @@ export default function Callback() {
         const access_token = await response.json()
         console.log('callback:', access_token)
 
-        //~ set global value to have updated access_token
-        //TODO: set it to have updated email
-        //setGlobalValues({access_token:access_token, email:'nacho.cheese999@gmail.com', username: 'currymonstanacho'})
-
         // //~ use access token to get profile data
         const headers = { 'Authorization': `Bearer ${access_token}` }
-        const response2 = await fetch('https://api.spotify.com/v1/users/currymonstanacho',
-          { headers: headers });
-        const profile = await response2.json()
-        console.log('PROFILE INFORMATION')
-        console.log(profile)
-
-        //~ get top artists
-        // const response3 = await fetch('https://api.spotify.com/v1/me/top/artists', { headers: headers });
-        // const topArtists = await response3.json()
-        // console.log('TOP ARTISTS')
-        // console.log(topArtists)
 
         const userInfo = await fetch('/api/authentication/email', {
           method: 'POST',
@@ -48,6 +33,8 @@ export default function Callback() {
         });
 
         const userData = await userInfo.json();
+         //~ set global value to have updated access_token
+        //TODO: set it to have updated email
         setGlobalValues({ access_token: userData.accessToken, email: userData.email, username: userData.username })
         let redirect = '';
         if (userData.exists === false){

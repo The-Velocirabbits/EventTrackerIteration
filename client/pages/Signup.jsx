@@ -4,42 +4,12 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ValuesContext } from '../pages/Contexts';
 
 export default function Signup() {
- // const [email, setEmail] = useState('');
-  //const [username, setUsername] = useState('');
   const [city, setUserCity] = useState('');
   const [state, setUserState] = useState('');
   const navigate = useNavigate();
 
   const { globalValues } = useContext(ValuesContext);
   const { email, username, access_token } = globalValues;
-
-  // send the location and email to the database!!
-  //get access token!
-  // on submit, the inputs are sent in a req body to the server at /api/signup
-  // useEffect(() => {
-  //   const fetchingData = async () => {
-  //     try {
-        
-        // const response = await fetch(`/api/user`, {
-        //   method: 'GET',
-        //   headers: { 'Content-Type': 'application/json' },
-        // });
-        // const data = await response.json();
-        // console.log(data);
-        // /*
-        //   {
-        //     email: email
-        //     username: username
-        //   }
-        //   */
-        // setUsername(data.username);
-        // setEmail(data.email);
-  //     } catch {
-  //       throw new Error('Error with initial fetch request!');
-  //     }
-  //   };
-  //   fetchingData();
-  // }, []);
 
   const handleNewUser = async (email, access_token, username, e) => {
 
