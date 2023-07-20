@@ -8,7 +8,7 @@ import Webplay from './Webplay.jsx';
 
 export default function HomePage() {
   const { globalValues } = useContext(ValuesContext);
-  const { email, username, access_token } = globalValues;
+  const { email, username, access_token, profile_pic } = globalValues;
   const [userData, setUserData] = useState({});
   const [artists, setArtists] = useState(['ye']);
   const [genres, setGenres] = useState(['genre']);
@@ -67,6 +67,7 @@ export default function HomePage() {
         </Breadcrumbs>
       </div>
       <div className="home"> {`Welcome, ${username}!`}</div>
+      {profile_pic ? <img src={profile_pic} /> : ''}
       <div className='mainBox'>
         <List arr={artists} type='Artist' />
         <List arr={genres} type='Genre' />

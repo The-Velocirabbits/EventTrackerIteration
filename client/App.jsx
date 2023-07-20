@@ -10,7 +10,7 @@ import Callback from './pages/Callback.jsx';
 
 //create app HTML structure
 const App = () => {
-  const [globalValues, setGlobalValues] = useState({ access_token: '', email: '', username: '' });
+  const [globalValues, setGlobalValues] = useState({ access_token: '', email: '', username: '', profile_pic: '' });
 
   return (
     <div>
