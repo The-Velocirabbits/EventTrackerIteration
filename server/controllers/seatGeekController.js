@@ -9,6 +9,7 @@ const seatGeekController = {};
 seatGeekController.getArtistEvents = async (req, res, next) => {
   try {
     const eventsArray = [];
+    const eventsURLs = new Set();
     const artists = res.locals.userInfo.artists;
     const city = res.locals.userInfo.location.city;
     const state = res.locals.userInfo.location.state
@@ -22,6 +23,16 @@ seatGeekController.getArtistEvents = async (req, res, next) => {
       .toJSON()
       .slice(0, 10);
 
+    //~ get location of user in lon and lat
+    const noSpacesCity = city.replace(/\s/g, '');
+    const googleURL = `https://maps.googleapis.com/maps/api/geocode/json?address=${noSpacesCity},${state}&key=${google.api_key}`
+    // console.log(googleURL)
+    const locationResponse = await fetch(googleURL)
+    const locationReturn = await locationResponse.json()
+    // console.log(locationReturn.results[0].geometry)
+    const { lng, lat } = locationReturn.results[0].geometry.location
+    // console.log('coordinates: ',lng,lat)
+
     //itterating through each artist in array and fetching Event data
     for (let i = 0; i < artists.length; i++) {
       /*fetch to seatgeek API 
@@ -29,34 +40,48 @@ seatGeekController.getArtistEvents = async (req, res, next) => {
       */
       const artistString = artists[i].toLowerCase().replaceAll(' ', '-');
       //TODO: change this
-      //~ get long and lat
-      const noSpacesCity = city.replace(/\s/g, '');
-      const locationResponse = fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${noSpacesCity},${state}&key=${google.api_key}`)
-      console.log('LOCATION RESPONSE HERE: ', locationResponse)
-      //~ get performers id
-      // const performerResponse
 
-      const zipcode = '10010'
+      //~ get performers id
+      const performerResponse = await fetch(`https://api.seatgeek.com/2/performers?slug=${artistString}&client_id=${seatgeek.client_id}`)
+      const performerData = await performerResponse.json()
+      const performerId = performerData.performers[0].id
+      // console.log(performerData)
+      // console.log(performerId)
+      const fetchURL = `https://api.seatgeek.com/2/recommendations/?client_id=${seatgeek.client_id}&lat=${lat}&lon=${lng}&datetime_utc.gte=${today}&datetime_utc.lte=${threeMonths}&performers.id=${performerId}&client_secret=${seatgeek.client_secret}`
+      console.log('FETCH URL: ', fetchURL)
       const response = await fetch(
-        // `https://api.seatgeek.com/2/recommendations/?client_id=${seatgeek.client_id}&client_secret=${seatgeek.client_secret}&performers.slug=${artistString}&range=100&postal_code==${zipcode}&datetime_utc.gte=${today}&datetime_utc.lte=${threeMonths}`
-        `https://api.seatgeek.com/2/events/?client_id=${seatgeek.client_id}&client_secret=${seatgeek.client_secret}&performers.slug=${artistString}&venue.city=${city}&datetime_utc.gte=${today}&datetime_utc.lte=${threeMonths}`
+        `https://api.seatgeek.com/2/recommendations/?client_id=MzUwMDk5Mjd8MTY4OTcxMDI1Ni45MTUxMTM3&lat=40.7127753&lon=-74.0059728&datetime_utc.gte=2023-07-20&datetime_utc.lte=2023-10-20&performers.id=2351&client_secret=f0f54b1f9c665dde35e329aca3af3925562ca5d8f3501f9f6643bd74d9567d96`
       );
-      console.log('url fetching: ', `https://api.seatgeek.com/2/events/?client_id=${seatgeek.client_id}&client_secret=${seatgeek.client_secret}&performers.slug=${artistString}&venue.city=${city}&datetime_utc.gte=${today}&datetime_utc.lte=${threeMonths}`)
-      const { events } = await response.json();
-      console.log(events);
+      // `https://api.seatgeek.com/2/recommendations/?client_id=${seatgeek.client_id}&lat=${lat}&lon=${lng}&datetime_utc.gte=${today}&datetime_utc.lte=${threeMonths}&performers.id=${performerId}&client_secret=${seatgeek.client_secret}`
+      // `https://api.seatgeek.com/2/events/?client_id=${seatgeek.client_id}&client_secret=${seatgeek.client_secret}&performers.slug=${artistString}&venue.city=${city}&datetime_utc.gte=${today}&datetime_utc.lte=${threeMonths}`
+      // console.log('url fetching: ', `https://api.seatgeek.com/2/events/?client_id=${seatgeek.client_id}&client_secret=${seatgeek.client_secret}&performers.slug=${artistString}&venue.city=${city}&datetime_utc.gte=${today}&datetime_utc.lte=${threeMonths}`)
+      const { recommendations } = await response.json();
+      console.log(recommendations);
       //making a separate object for each event returned back for an artist
-      events.forEach((el) => {
-        const event = {
-          artist: el.performers[0].name,
-          genre: el.performers[0].genres[1].name,
-          price: el.stats.lowest_price,
-          date: el.datetime_local,
-          venue: el.venue.name,
-          eventUrl: el.url,
-          imgUrl: el.performers[0].image,
-        };
-        eventsArray.push(event);
-      });
+      //~ put a filter so it is only 10 songs per artist
+      for (let i = 0; i < recommendations.length; i++) {
+        console.log(i)
+        el = recommendations[i]
+        if (el.event && el.event.performers && el.event.performers.length > 0
+          && eventsURLs.has(el.event.url) === false //~ Get URL and check if doesnt exist already in array (prevent duplicates)
+        ) {
+          eventsURLs.add(el.event.url)
+          const performerOne = el.event.performers[0];
+          const performerTwo = el.event.performers.length > 1 ? el.event.performers[1] : null;
+          const event = {
+            artist: performerOne && performerOne.name ? performerOne.name : "N/A",
+            genre: performerTwo && performerTwo.genres && performerTwo.genres[0] && performerTwo.genres[0].name ? performerTwo.genres[0].name : "N/A",
+            price: el.event.stats ? el.event.stats.lowest_price : "N/A",
+            date: el.event.datetime_local,
+            venue: el.event.venue ? el.event.venue.name : "N/A",
+            eventUrl: el.event.url,
+            imgUrl: performerOne && performerOne.image ? performerOne.image : "N/A",
+          };
+          // console.log(event)
+          eventsArray.push(event);
+        }
+        // eventsArray.push(event);
+      };
     }
     //attaching Array of objects to send as response to front end
     res.locals.artistEvents = eventsArray;
@@ -65,7 +90,7 @@ seatGeekController.getArtistEvents = async (req, res, next) => {
     return next();
   } catch (err) {
     return next({
-      log: `seatGeekController.getArtistEvents ERROR: trouble fetching seatgeek events by artists`,
+      log: `seatGeekController.getArtistEvents ERROR: trouble fetching seatgeek events by artists, ${err}`,
       message: {
         err: `seatGeekController.getArtistEvents: ERROR: ${err}`,
       },
