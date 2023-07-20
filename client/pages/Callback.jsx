@@ -29,11 +29,11 @@ export default function Callback() {
 
         // //~ use access token to get profile data
         const headers = { 'Authorization': `Bearer ${access_token}` }
-        // const response2 = await fetch('https://api.spotify.com/v1/users/currymonstanacho',
-        //   { headers: headers });
-        // const profile = await response2.json()
-        // console.log('PROFILE INFORMATION')
-        // console.log(profile)
+        const response2 = await fetch('https://api.spotify.com/v1/users/currymonstanacho',
+          { headers: headers });
+        const profile = await response2.json()
+        console.log('PROFILE INFORMATION')
+        console.log(profile)
 
         //~ get top artists
         // const response3 = await fetch('https://api.spotify.com/v1/me/top/artists', { headers: headers });
