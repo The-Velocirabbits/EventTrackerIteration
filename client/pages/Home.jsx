@@ -64,8 +64,6 @@ export default function HomePage() {
             to="/preferences"
           >
             PREFERENCES
-            state={{ email, username, access_token }}
-          >PREFERENCES
           </Link>
         </Breadcrumbs>
       </div>
