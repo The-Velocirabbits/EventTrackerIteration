@@ -32,6 +32,7 @@ spotifyController.getAccountInfo = async (req, res, next) => {
 
   try {
     const accessToken = req.body.accessToken;
+    console.log('getAccountInfo:', accessToken)
 
     const searchParams = {
       method: 'GET',
@@ -45,6 +46,8 @@ spotifyController.getAccountInfo = async (req, res, next) => {
     const { email, display_name } = data;
     res.locals.email = email;
     res.locals.username = display_name;
+    console.log('getAccountInfo email:', email);
+    console.log('getAccountInfo username:', display_name);
     return next();
   } catch (err) {
     return next({

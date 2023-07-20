@@ -18,6 +18,7 @@ export default function Preference() {
   const [currGenres, setCurrGenres] = useState([]);
   const [currLocation, setCurrLocation] = useState({ city: '', state: '' })
 
+
   useEffect(() => {
     const fetchingData = async () => {
       //~ use current email to get information on user
