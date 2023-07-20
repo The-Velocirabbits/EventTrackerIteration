@@ -50,20 +50,16 @@ export default function Callback() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ accessToken: access_token })
         });
+
         const userData = await userInfo.json();
+        setGlobalValues({ access_token: userData.accessToken, email: userData.email, username: userData.username })
         let redirect = '';
         if (userData.exists === false){
           redirect = '/signup';
         } else {
           redirect = '/home';
         }
-        navigate(redirect, {
-          state: {
-            email: userData.email,
-            accessToken: userData.accessToken,
-            username: userData.username,
-          }
-        });
+        navigate(redirect);
        
       }
       catch (err) {

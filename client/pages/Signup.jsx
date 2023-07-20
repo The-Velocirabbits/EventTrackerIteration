@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 // import '../styles.css';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { ValuesContext } from '../pages/Contexts';
 
 export default function Signup() {
  // const [email, setEmail] = useState('');
@@ -9,8 +10,8 @@ export default function Signup() {
   const [state, setUserState] = useState('');
   const navigate = useNavigate();
 
-  const location = useLocation();
-  const { email, accessToken, username } = location.state;
+  const { globalValues } = useContext(ValuesContext);
+  const { email, username, access_token } = globalValues;
 
   // send the location and email to the database!!
   //get access token!
@@ -40,7 +41,7 @@ export default function Signup() {
   //   fetchingData();
   // }, []);
 
-  const handleNewUser = async (email, accessToken, username, e) => {
+  const handleNewUser = async (email, access_token, username, e) => {
 
     e.preventDefault();
     try {
@@ -51,7 +52,7 @@ export default function Signup() {
       const signupReq = {
         email: email,
         username: username,
-        accessToken: accessToken,
+        accessToken: access_token,
         city: userCity,
         state: userState,
       };
@@ -64,13 +65,7 @@ export default function Signup() {
       if (!response.ok) {
         throw new Error('Failed to save user data.');
       }
-      navigate('/preferences', {
-        state: {
-          email: email,
-          username: username,
-          accessToken: accessToken
-        }
-      });
+      navigate('/preferences');
     } catch (err) {
       console.log('handleNewUser error:', err);
     }
@@ -85,7 +80,7 @@ export default function Signup() {
         <form onSubmit={(e) =>
             handleNewUser(
               email,
-              accessToken,
+              access_token,
               username,
               e
             )

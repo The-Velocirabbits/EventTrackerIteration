@@ -7,8 +7,8 @@ import { ValuesContext } from '../pages/Contexts';
 export default function Preference() {
   // const location = useLocation();
   // console.log('location: ', location);
-  //const { globalValues } = useContext(ValuesContext);
-  //const { email, username, access_token } = globalValues;
+  const { globalValues } = useContext(ValuesContext);
+  const { email, username, access_token } = globalValues;
   // const email = 'haliahaynes';
 
   const [userData, setUserData] = useState({});
@@ -18,8 +18,6 @@ export default function Preference() {
   const [currGenres, setCurrGenres] = useState([]);
   const [currLocation, setCurrLocation] = useState({ city: '', state: '' })
 
-  const location = useLocation();
-  const { email, username, accessToken } = location.state;
 
   useEffect(() => {
     const fetchingData = async () => {
@@ -167,7 +165,7 @@ export default function Preference() {
           <p color="text.primary" className="breadcrumbs">
             PREFERENCES
           </p>
-          <Link to="/home" state={{ email, username, accessToken }}>HOME PAGE</Link>
+          <Link to="/home">HOME PAGE</Link>
         </Breadcrumbs>
       </div>
       <div className="preferences">
