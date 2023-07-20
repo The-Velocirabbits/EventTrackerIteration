@@ -11,6 +11,7 @@ seatGeekController.getArtistEvents = async (req, res, next) => {
     const eventsArray = [];
     const eventsURLs = new Set();
     const artists = res.locals.userInfo.artists;
+    console.log('artists information: ', artists)
     const city = res.locals.userInfo.location.city;
     const state = res.locals.userInfo.location.state
     //const artists = ['ice-spice', 'all-them-witches', 'clutch'];
@@ -39,7 +40,6 @@ seatGeekController.getArtistEvents = async (req, res, next) => {
       query based on City, Artist, and date range of 3 Months
       */
       const artistString = artists[i].toLowerCase().replaceAll(' ', '-');
-      //TODO: change this
 
       //~ get performers id
       const performerResponse = await fetch(`https://api.seatgeek.com/2/performers?slug=${artistString}&client_id=${seatgeek.client_id}`)
@@ -49,9 +49,7 @@ seatGeekController.getArtistEvents = async (req, res, next) => {
       // console.log(performerId)
       const fetchURL = `https://api.seatgeek.com/2/recommendations/?client_id=${seatgeek.client_id}&lat=${lat}&lon=${lng}&datetime_utc.gte=${today}&datetime_utc.lte=${threeMonths}&performers.id=${performerId}&client_secret=${seatgeek.client_secret}`
       console.log('FETCH URL: ', fetchURL)
-      const response = await fetch(
-        `https://api.seatgeek.com/2/recommendations/?client_id=MzUwMDk5Mjd8MTY4OTcxMDI1Ni45MTUxMTM3&lat=40.7127753&lon=-74.0059728&datetime_utc.gte=2023-07-20&datetime_utc.lte=2023-10-20&performers.id=2351&client_secret=f0f54b1f9c665dde35e329aca3af3925562ca5d8f3501f9f6643bd74d9567d96`
-      );
+      const response = await fetch(fetchURL);
       // `https://api.seatgeek.com/2/recommendations/?client_id=${seatgeek.client_id}&lat=${lat}&lon=${lng}&datetime_utc.gte=${today}&datetime_utc.lte=${threeMonths}&performers.id=${performerId}&client_secret=${seatgeek.client_secret}`
       // `https://api.seatgeek.com/2/events/?client_id=${seatgeek.client_id}&client_secret=${seatgeek.client_secret}&performers.slug=${artistString}&venue.city=${city}&datetime_utc.gte=${today}&datetime_utc.lte=${threeMonths}`
       // console.log('url fetching: ', `https://api.seatgeek.com/2/events/?client_id=${seatgeek.client_id}&client_secret=${seatgeek.client_secret}&performers.slug=${artistString}&venue.city=${city}&datetime_utc.gte=${today}&datetime_utc.lte=${threeMonths}`)
@@ -83,6 +81,9 @@ seatGeekController.getArtistEvents = async (req, res, next) => {
         // eventsArray.push(event);
       };
     }
+
+    //TODO: sort by artists that were inputted
+
     //attaching Array of objects to send as response to front end
     res.locals.artistEvents = eventsArray;
     console.log('artist eventsArray length: ', eventsArray.length)
