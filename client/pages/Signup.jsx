@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-// import '../styles.css';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 export default function Signup() {
@@ -15,19 +14,11 @@ export default function Signup() {
   useEffect(() => {
     const fetchingData = async () => {
       try {
-        // const {email} = location.state
         const response = await fetch(`/api/user`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
         });
         const data = await response.json();
-        console.log(data);
-        /*
-          {
-            email: email
-            username: username
-          }
-          */
         setUsername(data.username);
         setEmail(data.email);
       } catch {
@@ -85,4 +76,3 @@ export default function Signup() {
     </div>
   );
 }
-//next: Preference Page

@@ -42,8 +42,10 @@ authController.initializeAuth = (req, res, next) => {
     res.cookie(stateKey, state);
     console.log('cookie stateKey: ', state);
 
+
+
     // object sent as res.query to spotify so your application can request authorization
-    const scope = 'user-read-private user-read-email user-top-read';
+    const scope = 'app-remote-control user-read-currently-playing user-modify-playback-state user-read-playback-state streaming user-read-private user-read-email user-top-read'; //adding streaming scope 
     res.locals.reqAuthentication = querystring.stringify({
       response_type: 'code',
       client_id: client_id,
@@ -143,7 +145,7 @@ authController.getTokens = (req, res, next) => {
       // });
 
 
-        return next()
+      return next()
     } else {
       return next({
         log: 'error in authController.getTokens, invalid token: ' + console.error(),
