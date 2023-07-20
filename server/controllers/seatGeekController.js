@@ -2,67 +2,66 @@ const { seatgeek, google } = require('../models/secrets.js');
 
 const seatGeekController = {};
 
-//add this to end of any request url
-// `?client_id=${seatgeek.client_id}&client_secret=${seatgeek.client_secret}`
-
 //get request to SeatGeek based on user artist preferences
 seatGeekController.getArtistEvents = async (req, res, next) => {
+  console.log('entering: seatGeekController.getArtistEvents')
   try {
     const eventsArray = [];
     const eventsURLs = new Set();
+    const priorityEvents = [];
+    const recommendedEvents = [];
     const artists = res.locals.userInfo.artists;
     const city = res.locals.userInfo.location.city;
     const state = res.locals.userInfo.location.state
-    //const artists = ['ice-spice', 'all-them-witches', 'clutch'];
-    //const city = 'Denver';
 
-    //generating constants for todays date and date three months from now in API format
+    // adding all users artists in slug format into array
+    const usersArtists = [];
+    artists.forEach( (a) => {
+      usersArtists.push(a.toLowerCase().replaceAll(' ', '-'))
+    })
+    console.log('users all artists: ', usersArtists)
+
+
+
+    //~ generating constants for todays date and date three months from now in API format
     const date = new Date();
     const today = date.toJSON().slice(0, 10);
     const threeMonths = new Date(date.setMonth(date.getMonth() + 3))
       .toJSON()
       .slice(0, 10);
 
-    //~ get location of user in lon and lat
+    //~ get location of user in longitude and latitude
     const noSpacesCity = city.replace(/\s/g, '');
     const googleURL = `https://maps.googleapis.com/maps/api/geocode/json?address=${noSpacesCity},${state}&key=${google.api_key}`
-    // console.log(googleURL)
     const locationResponse = await fetch(googleURL)
     const locationReturn = await locationResponse.json()
-    // console.log(locationReturn.results[0].geometry)
     const { lng, lat } = locationReturn.results[0].geometry.location
-    // console.log('coordinates: ',lng,lat)
 
-    //itterating through each artist in array and fetching Event data
+    //~ iterating through each artist in array and fetching Event data
     for (let i = 0; i < artists.length; i++) {
-      /*fetch to seatgeek API 
-      query based on City, Artist, and date range of 3 Months
-      */
+
+      // converting artist name to slug format
       const artistString = artists[i].toLowerCase().replaceAll(' ', '-');
-      //TODO: change this
 
       //~ get performers id
       const performerResponse = await fetch(`https://api.seatgeek.com/2/performers?slug=${artistString}&client_id=${seatgeek.client_id}`)
       const performerData = await performerResponse.json()
-      console.log('PERFORMER DATA: ', performerData)
+      
+      // continueing if artist name doesnt exist in seatgeek api
+      if (performerData.performers.length === 0) continue;
       const performerId = performerData.performers[0].id
-      // console.log(performerData)
-      // console.log(performerId)
+
       const fetchURL = `https://api.seatgeek.com/2/recommendations/?client_id=${seatgeek.client_id}&lat=${lat}&lon=${lng}&datetime_utc.gte=${today}&datetime_utc.lte=${threeMonths}&performers.id=${performerId}&client_secret=${seatgeek.client_secret}`
       console.log('FETCH URL: ', fetchURL)
       const response = await fetch(fetchURL);
-      // `https://api.seatgeek.com/2/recommendations/?client_id=${seatgeek.client_id}&lat=${lat}&lon=${lng}&datetime_utc.gte=${today}&datetime_utc.lte=${threeMonths}&performers.id=${performerId}&client_secret=${seatgeek.client_secret}`
-      // `https://api.seatgeek.com/2/events/?client_id=${seatgeek.client_id}&client_secret=${seatgeek.client_secret}&performers.slug=${artistString}&venue.city=${city}&datetime_utc.gte=${today}&datetime_utc.lte=${threeMonths}`
-      // console.log('url fetching: ', `https://api.seatgeek.com/2/events/?client_id=${seatgeek.client_id}&client_secret=${seatgeek.client_secret}&performers.slug=${artistString}&venue.city=${city}&datetime_utc.gte=${today}&datetime_utc.lte=${threeMonths}`)
       const { recommendations } = await response.json();
-      // console.log(recommendations);
-      //making a separate object for each event returned back for an artist
+
       //~ put a filter so it is only 10 songs per artist
       for (let i = 0; i < recommendations.length; i++) {
-        // console.log(i)
+
         el = recommendations[i]
         if (el.event && el.event.performers && el.event.performers.length > 0
-          && eventsURLs.has(el.event.url) === false //~ Get URL and check if doesnt exist already in array (prevent duplicates)
+          && eventsURLs.has(el.event.url) === false // Get URL and check if doesnt exist already in array (prevent duplicates)
         ) {
           eventsURLs.add(el.event.url)
           const performerOne = el.event.performers[0];
@@ -76,15 +75,37 @@ seatGeekController.getArtistEvents = async (req, res, next) => {
             eventUrl: el.event.url,
             imgUrl: performerOne && performerOne.image ? performerOne.image : "N/A",
           };
-          // console.log(event)
+          //~ if artist of event matches artistString, add to priority event list
+          const eventArtist = el.event.performers[0].name.toLowerCase().replaceAll(' ', '-');
+          console.log('EVENT ARTIST: ', eventArtist)
+          // if (usersArtists.includes(eventArtist))
+          //eventArtist == artistString
+          if (usersArtists.includes(eventArtist)) priorityEvents.push(event)
+          else recommendedEvents.push(event)
           eventsArray.push(event);
         }
-        // eventsArray.push(event);
       };
     }
+    console.log('PRIORITY EVENT: ', priorityEvents)
+    // console.log('RECOMMENDED EVENT: ',recommendedEvents)
+    console.log(priorityEvents.length, recommendedEvents.length)
+
+
     //attaching Array of objects to send as response to front end
-    res.locals.artistEvents = eventsArray;
-    console.log('artist eventsArray length: ', eventsArray.length)
+    priorityEvents.sort(function(a, b) {
+      if (a.artist < b.artist) { 
+        return -1;
+      }
+      if (a.artist > b.artist) {
+        return 1;
+      }
+      return 0;
+    });
+    
+    console.log('PRIORITY EVENT: ', priorityEvents)
+
+    res.locals.artistEvents = priorityEvents.concat(recommendedEvents);
+    // console.log('artist eventsArray length: ', eventsArray.length)
 
     return next();
   } catch (err) {
