@@ -27,6 +27,7 @@ const userSchema = new Schema({
   },
   artists: [String],
   genres: [String],
+  profile_pic: String,
   accessToken: String,
 });
 

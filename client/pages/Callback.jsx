@@ -24,14 +24,6 @@ export default function Callback() {
         console.log('callback:', access_token)
         const headers = { 'Authorization': `Bearer ${access_token}` }
 
-
-        // //~ get profile pic from profile information
-        // const response2 = await fetch('https://api.spotify.com/v1/users/currymonstanacho',
-        //   { headers: headers });
-        // const profile = await response2.json()
-        // let profile_pic = '';
-        // if (profile.images && profile.images.length > 1) profile_pic = profile.images[1].url;
-
         //~ pulling user info from db
         const userInfo = await fetch('/api/authentication/email', {
           method: 'POST',
@@ -40,8 +32,9 @@ export default function Callback() {
         });
         const userData = await userInfo.json();
 
-        //~ set global value to have updated information
-        setGlobalValues({ access_token: userData.accessToken, email: userData.email, username: userData.username, profile_pic: userData.profile_pic })
+         //~ set global value to have updated information
+        console.log('userData.location', userData.location)
+        setGlobalValues({ access_token: userData.accessToken, email: userData.email, username: userData.username, profile_pic: userData.profile_pic, location: userData.location})
         let redirect = '';
         if (userData.exists === false) {
           redirect = '/signup';

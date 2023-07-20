@@ -42,7 +42,7 @@ userController.getUserInfo = async (req, res, next) => {
     });
   }
 };
-
+//TODO: PASS PROFILE PIC AND LOCATION FOR NEW USERS
 userController.createUser = async (req, res, next) => {
   console.log('inside  userController.createUser')
   const { email, city, state, accessToken, username } = req.body;
@@ -187,9 +187,11 @@ userController.addToken = async (req, res, next) => {
       { accessToken, username, profile_pic },
       { new: true }
     );
+    //TODO: Add to DB schema
     if (userDoc) exists = true;
     console.log('USER DOCS HERE: ', userDoc)
     res.locals.exists = exists;
+    res.locals.location = userDoc.location;
     console.log('res.locals.exists', res.locals.exists);
     console.log('leaving addToken');
     return next();
