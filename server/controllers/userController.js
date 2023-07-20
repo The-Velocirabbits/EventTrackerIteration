@@ -177,16 +177,18 @@ userController.addToken = async (req, res, next) => {
   console.log('entering addToken');
   console.log('LOOK HERE: ', res.locals)
   const accessToken = req.body.accessToken;
-  const email = res.locals.email;
-  const username = res.locals.username;
+  const { email, username, profile_pic} = res.locals
+  // const email = res.locals.email;
+  // const username = res.locals.username;
   let exists = false;
   try {
     const userDoc = await Users.findOneAndUpdate(
       { email: email },
-      { accessToken, username },
+      { accessToken, username, profile_pic },
       { new: true }
     );
     if (userDoc) exists = true;
+    console.log('USER DOCS HERE: ', userDoc)
     res.locals.exists = exists;
     console.log('res.locals.exists', res.locals.exists);
     console.log('leaving addToken');
