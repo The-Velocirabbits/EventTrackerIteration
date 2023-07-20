@@ -67,11 +67,13 @@ export default function HomePage() {
           </Link>
         </Breadcrumbs>
       </div>
-      <div className="home"> {`Welcome, ${username}!`}</div>
-      {profile_pic ? <img src={profile_pic} /> : ''}
+      <div className="home">
+        <h2>{`Welcome, ${username}!`}</h2>
+        {profile_pic ? <img className='profPic' src={profile_pic} /> : ''}
+      </div>
       <div className='mainBox'>
-        <List arr={artists} type='Artist' />
-        <List arr={genres} type='Genre' />
+        <List arr={artists} type='Artist' location={location} />
+        <List arr={genres} type='Genre' location={location}/>
         <div id='webplay' className="showBox"><Webplay /></div>
       </div>
     </div>

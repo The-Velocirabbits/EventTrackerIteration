@@ -5,8 +5,8 @@ import { ValuesContext } from '../pages/Contexts';
 
 export default function Preference() {
 
-  const { globalValues } = useContext(ValuesContext);
-  const { email, username, access_token } = globalValues;
+  const { globalValues, setGlobalValues } = useContext(ValuesContext);
+  const { email, username, access_token, location, profile_pic } = globalValues;
 
   const [userData, setUserData] = useState({});
   const [newArtist, setNewArtist] = useState('');
@@ -62,8 +62,10 @@ export default function Preference() {
         email: userData.email,
         location: { city: currLocation.city, state: currLocation.state },
       };
+      // setCurrLocation()
+      setGlobalValues({ ...globalValues, location: { city: currLocation.city, state: currLocation.state } });
       await fetch(
-        `/api/preferences?email=${encodeURIComponent(userData.email)}`,
+        `/api/preferences?email=${userData.email}`,
         {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
@@ -175,6 +177,7 @@ export default function Preference() {
 
   return (
     <div className="preferencesPage">
+
       <div className="prefCrumb">
         <Breadcrumbs aria-label="breadcrumb">
           <Link to="/home">HOME PAGE</Link>
@@ -198,38 +201,38 @@ export default function Preference() {
             <p>State: {currLocation.state}</p>
             {/* add update function! */}
           </div>
+          {profile_pic ? <img className='prefProf' src={profile_pic} /> : ''}
 
-
-          <div>
-            <div className="updateLocation">
-              <p>to update location:</p>
-              <form onSubmit={handleLocation} autoComplete="off">
-                <div className="addCity">
-                  <p>New City:</p>
-                  <input
-                    name="newCity"
-                    type="text"
-                    placeholder="New City"
-                    required
-                    onChange={handleChangeCity}
-                  ></input>
-                </div>
-                <div className="addState">
-                  <p>New State:</p>
-                  <input
-                    name="newState"
-                    type="text"
-                    placeholder="New State"
-                    required
-                    onChange={handleChangeState}
-                  ></input>
-                  <br></br>
-                  <br></br>
-                </div>
-                <input className="Btn" type="submit" value="update"></input>
-              </form>
-            </div>
+          <div className="updateLocation">
+            <p>Update Location:</p>
+            <form onSubmit={handleLocation} autoComplete="off">
+              <div className="addCity">
+                <p>New City:</p>
+                <input
+                  name="newCity"
+                  type="text"
+                  placeholder="New City"
+                  required
+                  onChange={handleChangeCity}
+                ></input>
+              </div>
+              <div className="addState">
+                <p>New State:</p>
+                <input
+                  name="newState"
+                  type="text"
+                  placeholder="New State"
+                  required
+                  onChange={handleChangeState}
+                ></input>
+                <br></br>
+                <br></br>
+              </div>
+              <input className="Btn" type="submit" value="update"></input>
+            </form>
           </div>
+        </div>
+        <div>
 
 
         </div>

@@ -82,7 +82,7 @@ userController.updateUser = async (req, res, next) => {
   console.log(artists);
   console.log(genres);
 
-  if (!type || (!artists && !genres && !location)) {
+  if (!type && (!artists && !genres && !location)) {
     return next({
       log: 'userController.updateUser ERROR: missing artist/genre/location/type on req body',
       message: {
@@ -177,7 +177,7 @@ userController.addToken = async (req, res, next) => {
   console.log('entering addToken');
   console.log('LOOK HERE: ', res.locals)
   const accessToken = req.body.accessToken;
-  const { email, username, profile_pic} = res.locals
+  const { email, username, profile_pic } = res.locals
   // const email = res.locals.email;
   // const username = res.locals.username;
   let exists = false;

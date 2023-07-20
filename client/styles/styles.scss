@@ -58,45 +58,11 @@ body {
   margin: 10px;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
-  -ms-overflow-style: none;
+  // -ms-overflow-style: none;
   display: flex;
   -ms-flex-direction: column;
   flex-direction: column;
   height: 98vh;
-  scrollbar-width: none;
+  // scrollbar-width: none;
   width: 95%;
-}
-
-.userInfo {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  width: 100%;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-bottom: 20px;
-}
-
-.updateLocation {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-bottom: 0px;
-}
-
-.basicInfo {
-  display: flex;
-  flex-direction: column;
-  justify-content: left;
-  align-items: left;
-  width: 40%;
-  padding: 20px;
-  margin-bottom: 20px;
-  color: rgb(243, 240, 240);
-  border-color: rgb(4, 172, 4);
 }
