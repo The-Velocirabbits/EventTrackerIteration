@@ -175,12 +175,12 @@ export default function Preference() {
 
   return (
     <div className="preferencesPage">
-      <div className="breadcrumb">
+      <div className="prefCrumb">
         <Breadcrumbs aria-label="breadcrumb">
+          <Link to="/home">HOME PAGE</Link>
           <p color="text.primary" className="breadcrumbs">
             PREFERENCES
           </p>
-          <Link to="/home">HOME PAGE</Link>
         </Breadcrumbs>
       </div>
 

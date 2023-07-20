@@ -26,11 +26,11 @@ export default function Callback() {
 
 
         //~ get profile pic from profile information
-        const response2 = await fetch('https://api.spotify.com/v1/users/currymonstanacho',
-          { headers: headers });
-        const profile = await response2.json()
-        let profile_pic = '';
-        if (profile.images && profile.images.length > 1) profile_pic = profile.images[1].url;
+        // const response2 = await fetch('https://api.spotify.com/v1/users/currymonstanacho',
+        //   { headers: headers });
+        // const profile = await response2.json()
+        // let profile_pic = '';
+        // if (profile.images && profile.images.length > 1) profile_pic = profile.images[1].url;
 
         //~ update user info in db
         const userInfo = await fetch('/api/authentication/email', {
@@ -39,17 +39,27 @@ export default function Callback() {
           body: JSON.stringify({ accessToken: access_token })
         });
         const userData = await userInfo.json();
+        let profile_pic = '';
+        console.log(userData);
+        const response2 = await fetch(`https://api.spotify.com/v1/users/${userData.username}`,
+          { headers: headers });
+        const profile = await response2.json();
+        if (profile.images && profile.images.length > 1) {
+          console.log('PROFLIE')
+          console.log(profile);
+          profile_pic = profile.images[1].url;
+        }
 
-         //~ set global value to have updated information
-        setGlobalValues({ access_token: userData.accessToken, email: userData.email, username: userData.username, profile_pic: profile_pic})
+        //~ set global value to have updated information
+        setGlobalValues({ access_token: userData.accessToken, email: userData.email, username: userData.username, profile_pic: profile_pic })
         let redirect = '';
-        if (userData.exists === false){
+        if (userData.exists === false) {
           redirect = '/signup';
         } else {
           redirect = '/home';
         }
         navigate(redirect);
-       
+
       }
       catch (err) {
         console.log(err)
