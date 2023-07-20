@@ -44,7 +44,9 @@ seatGeekController.getArtistEvents = async (req, res, next) => {
       //~ get performers id
       const performerResponse = await fetch(`https://api.seatgeek.com/2/performers?slug=${artistString}&client_id=${seatgeek.client_id}`)
       const performerData = await performerResponse.json()
-      console.log('PERFORMER DATA: ', performerData)
+      console.log('PERFORMER DATA: ', performerData);
+      if (performerData.performers.length === 0) continue;
+      console.log(artistString);
       const performerId = performerData.performers[0].id
       // console.log(performerData)
       // console.log(performerId)

@@ -2,31 +2,20 @@ import React, { useState, useEffect, useContext } from 'react';
 import { ValuesContext } from '../pages/Contexts';
 import { v4 as uuidv4 } from 'uuid';
 
-const track = {
-    name: "",
-    album: {
-        images: [
-            { url: "" }
-        ]
-    },
-    artists: [
-        { name: "" }
-    ]
-}
 
 export default function WebPlayback() {
     const { globalValues } = useContext(ValuesContext);
     const { access_token } = globalValues;
+    const [load, setLoad] = useState(false);
     const [player, setPlayer] = useState(undefined);
     const [device_id, setDevice_Id] = useState(undefined);
     const [is_paused, setPaused] = useState(false);
     const [is_active, setActive] = useState(false);
-    const [current_track, setTrack] = useState(track);
+    const [current_track, setTrack] = useState(null);
     const [songs, setSongs] = useState([]);
-
     const [artistForm, setArtistForm] = useState('');
 
-
+    if (!load) setLoad(true);
     useEffect(() => {
         const script = document.createElement("script");
         script.src = "https://sdk.scdn.co/spotify-player.js";
@@ -51,7 +40,14 @@ export default function WebPlayback() {
                 if (!state) {
                     return;
                 }
+                console.log(state.track_window.current_track, current_track);
+                // if (state.track_window.current_track && state.track_window.current_track.id !== current_track.id) {
+                //     console.log(state.track_window.current_track.id, current_track.id);
+                //     setTrack(state.track_window.current_track);
+                // }
                 setTrack(state.track_window.current_track);
+                console.log('STATE')
+                console.log(state);
                 setPaused(state.paused);
                 player.getCurrentState().then(state => {
                     (!state) ? setActive(false) : setActive(true)
@@ -60,7 +56,7 @@ export default function WebPlayback() {
             player.connect();
         };
 
-    }, []);
+    }, [load]);
 
     useEffect(() => {
         activatePlayer();
@@ -104,7 +100,7 @@ export default function WebPlayback() {
                 headers: { 'Authorization': `Bearer ${access_token}` },
             });
             const result = await response.json();
-            console.log(result.artists.items[0].id);
+            // console.log(result.artists.items[0].id);
             artistId = result.artists.items[0].id;
         }
         catch (err) { console.log(err) }
@@ -116,7 +112,7 @@ export default function WebPlayback() {
                     headers: { 'Authorization': `Bearer ${access_token}` },
                 });
                 const result = await response.json();
-                console.log(result);
+                // console.log(result);
                 songArr = result.tracks;
                 setSongs(songArr);
             }
@@ -132,30 +128,30 @@ export default function WebPlayback() {
             }</div>
         )
     }
+    const currentTrackView = () => {
+        return (
+            <><div><img src={current_track.album.images[0].url} className="now-playing__cover" alt="Image Loading..." /></div>
+                <div className='buttonBar'>
+                    <button className="webButton" onClick={() => { player.previousTrack(); }}>&lt;&lt;</button>
+                    <button className="webButton" onClick={() => { player.togglePlay(); }}>{is_paused ? "PLAY" : "PAUSE"}</button>
+                    <button className="webButton" onClick={() => { player.nextTrack(); }}>&gt;&gt;</button>
+                </div>
+                <div className="now-playing__side">
+                    <div className="now-playing__name">{current_track.name}</div>
+                    <div className="now-playing__artist">{current_track.artists[0].name}</div>
+                </div></>
+        )
+    }
+    // console.log('track: ', current_track)
     return (
         <>
             <h3>Sample Music</h3>
             <div className='displayBoxes'>
                 <div className="artistShows webBox">
                     <div className="container">
-
-
+                        {current_track ? currentTrackView() : <div></div>}
                         <div className="main-wrapper">
-                            <div><img src={current_track.album.images[0].url} className="now-playing__cover" alt="Image Loading..." /></div>
-                            <div className='buttonBar'>
-
-                                <button className="webButton" onClick={() => { player.previousTrack() }} >&lt;&lt;</button>
-                                <button className="webButton" onClick={() => { player.togglePlay() }} >{is_paused ? "PLAY" : "PAUSE"}</button>
-                                <button className="webButton" onClick={() => { player.nextTrack() }} >&gt;&gt;</button>
-
-
-                            </div>
-                            <div className="now-playing__side">
-                                <div className="now-playing__name">{current_track.name}</div>
-                                <div className="now-playing__artist">{current_track.artists[0].name}</div>
-                            </div>
                         </div>
-
                         <input placeholder='Enter Artist' onChange={(e) => { setArtistForm(e.target.value) }}></input>
                         <button onClick={() => { artistSongs(artistForm) }}>submit</button>
                         {songs ? <SongList /> : <div></div>}
