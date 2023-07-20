@@ -12,15 +12,18 @@ import { ValuesContext } from '../pages/Contexts';
 
 export default function HomePage() {
   // const location = useLocation();
-  const { globalValues } = useContext(ValuesContext);
-  const { email, username, access_token } = globalValues;
+  //const { globalValues } = useContext(ValuesContext);
+  //const { email, username, access_token } = globalValues;
 
   const [userData, setUserData] = useState({});
   const [artists, setArtists] = useState(['ye']);
   const [genres, setGenres] = useState(['genre']);
 
+  const location = useLocation();
+  const { email, accessToken, username } = location.state;
+
   useEffect(() => {
-    console.log('Global Values: ', globalValues)
+    //console.log('Global Values: ', globalValues)
     const fetchingArtists = async () => {
       try {
         const response = await fetch(
@@ -68,7 +71,7 @@ export default function HomePage() {
             underline="hover"
             color="inherit"
             to="/preferences"
-            state={{ email, username, access_token }}
+            state={{ email, username, accessToken }}
           >
             PREFERENCES
           </Link>

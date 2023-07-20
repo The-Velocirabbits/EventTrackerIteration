@@ -33,11 +33,19 @@ router.get(
 router.post(
   '/email',
   spotifyController.getAccountInfo,
-  userController.getUserInfo,
-  userController.createUser,
-  userController.setUser,
+  userController.addToken,
   (req, res) => {
-    return res.status(200).json(res.locals.exists);
+    const email = res.locals.email;
+    const username = res.locals.username;
+    const exists = res.locals.exists;
+    const responseObj = {
+      email: email,
+      exists: exists,
+      accessToken: req.body.accessToken,
+      username: username,
+    };
+    console.log(res.locals.exists);
+    return res.status(200).json(responseObj);
   }
 );
 

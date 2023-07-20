@@ -7,7 +7,7 @@ const userController = {};
 userController.getUserInfo = async (req, res, next) => {
   console.log('inside userController.getUserInfo')
   const email = req.query.email;
-
+  console.log(email);
   if (!email)
     return next({
       log: `userController.getUserInfo ERROR: email missing from req body`,
@@ -18,6 +18,7 @@ userController.getUserInfo = async (req, res, next) => {
   try {
     const userInfo = await Users.findOne({ email });
     res.locals.userInfo = userInfo;
+    console.log(userInfo);
     /* Expect userInfo to come back as:
     { 
     email: String,
@@ -71,7 +72,6 @@ userController.createUser = async (req, res, next) => {
     });
 
   }
-  return next();
 };
 
 userController.updateUser = async (req, res, next) => {
@@ -205,22 +205,22 @@ userController.addToken = async (req, res, next) => {
 //   }
 // };
 
-userController.setUser = async (req, res, next) => {
-  try {
-    const currentUser = await CurrentUser.findOneAndUpdate(
-      {},
-      { email: res.locals.email, username: res.locals.username }
-    );
-    res.locals.currentUser = currentUser;
-    return next();
-  } catch {
-    return next({
-      log: `userController.getUserInfo ERROR: trouble setting user`,
-      message: {
-        err: 'userController.getUserInfo: ERROR: trouble setting user',
-      },
-    });
-  }
-};
+// userController.setUser = async (req, res, next) => {
+//   try {
+//     const currentUser = await CurrentUser.findOneAndUpdate(
+//       {},
+//       { email: res.locals.email, username: res.locals.username }
+//     );
+//     res.locals.currentUser = currentUser;
+//     return next();
+//   } catch {
+//     return next({
+//       log: `userController.getUserInfo ERROR: trouble setting user`,
+//       message: {
+//         err: 'userController.getUserInfo: ERROR: trouble setting user',
+//       },
+//     });
+//   }
+// };
 
 module.exports = userController;

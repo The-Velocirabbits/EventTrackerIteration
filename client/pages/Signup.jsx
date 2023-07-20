@@ -1,43 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // import '../styles.css';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 export default function Signup() {
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
+ // const [email, setEmail] = useState('');
+  //const [username, setUsername] = useState('');
   const [city, setUserCity] = useState('');
   const [state, setUserState] = useState('');
   const navigate = useNavigate();
 
+  const location = useLocation();
+  const { email, accessToken, username } = location.state;
+
   // send the location and email to the database!!
   //get access token!
   // on submit, the inputs are sent in a req body to the server at /api/signup
-  useEffect(() => {
-    const fetchingData = async () => {
-      try {
-        // const {email} = location.state
-        const response = await fetch(`/api/user`, {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        });
-        const data = await response.json();
-        console.log(data);
-        /*
-          {
-            email: email
-            username: username
-          }
-          */
-        setUsername(data.username);
-        setEmail(data.email);
-      } catch {
-        throw new Error('Error with initial fetch request!');
-      }
-    };
-    fetchingData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchingData = async () => {
+  //     try {
+        
+        // const response = await fetch(`/api/user`, {
+        //   method: 'GET',
+        //   headers: { 'Content-Type': 'application/json' },
+        // });
+        // const data = await response.json();
+        // console.log(data);
+        // /*
+        //   {
+        //     email: email
+        //     username: username
+        //   }
+        //   */
+        // setUsername(data.username);
+        // setEmail(data.email);
+  //     } catch {
+  //       throw new Error('Error with initial fetch request!');
+  //     }
+  //   };
+  //   fetchingData();
+  // }, []);
 
-  const handleNewUser = async (e) => {
+  const handleNewUser = async (email, accessToken, username, e) => {
+
     e.preventDefault();
     try {
       const userCity = e.target.elements.city.value;
@@ -46,16 +50,27 @@ export default function Signup() {
       setUserState(userState);
       const signupReq = {
         email: email,
+        username: username,
+        accessToken: accessToken,
         city: userCity,
         state: userState,
       };
-
-      await fetch('/api/signup', {
-        method: 'PATCH',
+      console.log('signUpReq:', signupReq);
+      const response = await fetch('/api/signup', {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(signupReq),
       });
-      navigate('/preferences');
+      if (!response.ok) {
+        throw new Error('Failed to save user data.');
+      }
+      navigate('/preferences', {
+        state: {
+          email: email,
+          username: username,
+          accessToken: accessToken
+        }
+      });
     } catch (err) {
       console.log('handleNewUser error:', err);
     }
@@ -67,7 +82,14 @@ export default function Signup() {
         <h1>It looks like you're new to EventTracker. Welcome!</h1>
         {/* send a post request to the database with the location */}
         {/* make sure to pass in email from OAuth as well! */}
-        <form onSubmit={handleNewUser} autoComplete="off" id="signupinfo">
+        <form onSubmit={(e) =>
+            handleNewUser(
+              email,
+              accessToken,
+              username,
+              e
+            )
+          } autoComplete="off" id="signupinfo">
           <h4>add your location:</h4>
           <input
             name="city"

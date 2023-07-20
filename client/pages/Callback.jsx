@@ -18,18 +18,18 @@ export default function Callback() {
     const href = window.location.href;
     const index = href.indexOf('callback');
     const urlQuery = href.slice(index)
-    console.log(urlQuery)
+    console.log('urlQuery:', urlQuery)
 
     async function getData() {
       try {
         //~ pass it through checkState and getToken to get the access_token
         const response = await fetch(`/api/authentication/${urlQuery}`);
         const access_token = await response.json()
-        console.log(access_token)
+        console.log('callback:', access_token)
 
         //~ set global value to have updated access_token
         //TODO: set it to have updated email
-        setGlobalValues({access_token:access_token, email:'nacho.cheese999@gmail.com', username: 'currymonstanacho'})
+        //setGlobalValues({access_token:access_token, email:'nacho.cheese999@gmail.com', username: 'currymonstanacho'})
 
         // //~ use access token to get profile data
         const headers = { 'Authorization': `Bearer ${access_token}` }
@@ -40,13 +40,30 @@ export default function Callback() {
         // console.log(profile)
 
         //~ get top artists
-        const response3 = await fetch('https://api.spotify.com/v1/me/top/artists', { headers: headers });
-        const topArtists = await response3.json()
-        console.log('TOP ARTISTS')
-        console.log(topArtists)
+        // const response3 = await fetch('https://api.spotify.com/v1/me/top/artists', { headers: headers });
+        // const topArtists = await response3.json()
+        // console.log('TOP ARTISTS')
+        // console.log(topArtists)
 
-        //~ add navigation here
-        navigate('/home')
+        const userInfo = await fetch('/api/authentication/email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ accessToken: access_token })
+        });
+        const userData = await userInfo.json();
+        let redirect = '';
+        if (userData.exists === false){
+          redirect = '/signup';
+        } else {
+          redirect = '/home';
+        }
+        navigate(redirect, {
+          state: {
+            email: userData.email,
+            accessToken: userData.accessToken,
+            username: userData.username,
+          }
+        });
        
       }
       catch (err) {

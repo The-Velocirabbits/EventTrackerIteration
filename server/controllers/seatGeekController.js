@@ -11,8 +11,6 @@ seatGeekController.getArtistEvents = async (req, res, next) => {
     const eventsArray = [];
     const artists = res.locals.userInfo.artists;
     const city = res.locals.userInfo.location.city;
-    //const artists = ['ice-spice', 'all-them-witches', 'clutch'];
-    //const city = 'Denver';
 
     //generating constants for todays date and date three months from now in API format
     const date = new Date();
