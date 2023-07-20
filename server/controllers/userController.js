@@ -75,20 +75,21 @@ userController.createUser = async (req, res, next) => {
 };
 
 userController.updateUser = async (req, res, next) => {
-  console.log('inside  userController.updateUser')
+  console.log('inside userController.updateUser');
 
   const email = req.query.email;
-  const { artists, genres, location } = req.body;
+  const { artists, genres, location, type } = req.body;
   console.log(artists);
   console.log(genres);
 
-  if (!artists && !genres && !location)
+  if (!type || (!artists && !genres && !location)) {
     return next({
-      log: `userController.updateUser ERROR: missing artist/genre/location on req body`,
+      log: 'userController.updateUser ERROR: missing artist/genre/location/type on req body',
       message: {
-        err: 'userController.updateUser: ERROR: missing artist/genre/location on req body',
+        err: 'userController.updateUser: ERROR: missing artist/genre/location/type on req body',
       },
     });
+  }
 
   try {
     if (location) {
@@ -98,34 +99,47 @@ userController.updateUser = async (req, res, next) => {
         { new: true }
       );
     }
-    if (artists) {
+    if (artists && type === 'add') {
       const updatedUser = await Users.findOneAndUpdate(
         { email: email },
         { $push: { artists: artists } },
         { new: true }
       );
-      res.locals.updatedUser = updatedUser;
+    } else if (artists && type === 'delete') {
+      const updatedUser = await Users.findOneAndUpdate(
+        { email: email },
+        { $pull: { artists: artists } },
+        { new: true }
+      );
     }
-    if (genres) {
+    if (genres && type === 'add') {
       const updatedUser = await Users.findOneAndUpdate(
         { email: email },
         { $push: { genres: genres } },
         { new: true }
       );
-      res.locals.updatedUser = updatedUser;
+    } else if (genres && type === 'delete') {
+      const updatedUser = await Users.findOneAndUpdate(
+        { email: email },
+        { $pull: { genres: genres } },
+        { new: true }
+      );
     }
+    res.locals.updatedUser = updatedUser;
     console.log(res.locals.updatedUser);
-    console.log('leaving  userController.updateUser')
+    console.log('leaving userController.updateUser');
     return next();
   } catch (err) {
     return next({
-      log: `userController.updateUser ERROR: trouble updating user`,
+      log: 'userController.updateUser ERROR: trouble updating user',
       message: {
         err: `userController.updateUser ERROR: ${err}`,
       },
     });
   }
 };
+
+
 //initially updates users prefered artists
 userController.updateUserSpotify = async (req, res, next) => {
   console.log('inside  userController.updateUserSpotify')
@@ -186,41 +200,5 @@ userController.addToken = async (req, res, next) => {
     });
   }
 };
-
-// userController.getCurrentUser = async (req, res, next) => {
-//   try {
-//     const { username } = req.body
-//     console.log(username)
-//     const currentUser = await Users.findOne({username:username});
-//     console.log(currentUser)
-//     //res.locals.currentUser = currentUser;
-//     return next();
-//   } catch {
-//     return next({
-//       log: `userController.getUserInfo ERROR: trouble getting user data from database`,
-//       message: {
-//         err: 'userController.getUserInfo: ERROR: trouble getting user data from database',
-//       },
-//     });
-//   }
-// };
-
-// userController.setUser = async (req, res, next) => {
-//   try {
-//     const currentUser = await CurrentUser.findOneAndUpdate(
-//       {},
-//       { email: res.locals.email, username: res.locals.username }
-//     );
-//     res.locals.currentUser = currentUser;
-//     return next();
-//   } catch {
-//     return next({
-//       log: `userController.getUserInfo ERROR: trouble setting user`,
-//       message: {
-//         err: 'userController.getUserInfo: ERROR: trouble setting user',
-//       },
-//     });
-//   }
-// };
 
 module.exports = userController;

@@ -63,8 +63,6 @@ seatGeekController.getGenreEvents = async (req, res, next) => {
     const genre = res.locals.userInfo.genres;
     console.log('genre:', genre);
     const city = res.locals.userInfo.location.city;
-    // const genre = 'rock';
-    // const city = 'Denver';
 
     //generating constants for todays date and date three months from now in API format
     const date = new Date();
