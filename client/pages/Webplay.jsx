@@ -46,8 +46,6 @@ export default function WebPlayback() {
                 //     setTrack(state.track_window.current_track);
                 // }
                 if (state.track_window.current_track) setTrack(state.track_window.current_track);
-                console.log('STATE')
-                console.log(state);
                 setPaused(state.paused);
                 player.getCurrentState().then(state => {
                     (!state) ? setActive(false) : setActive(true)
