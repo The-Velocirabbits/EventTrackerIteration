@@ -1,14 +1,14 @@
 import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-export const List = ({ arr, type }) => {
+export const List = ({ arr, type, location }) => {
   if (!Array.isArray(arr)) return <div>idk bruther</div>
   return (
     <div className="showBox">
-      <h3>Upcoming Shows</h3>
+      {type === 'Artist' ? <h2>Upcoming Shows ({location.city}, {location.state})</h2> : <div></div>}
       <div className='displayBoxes'>
         <div className="artistShows">
-          <h2>Shows Filtered By {type}</h2>
+          <h3>Shows Filtered By {type}</h3>
           <div className='overflowBox'>
             {arr ? arr.map((el) => (
               <div key={uuidv4()} className="card">

@@ -143,7 +143,7 @@ export default function WebPlayback() {
     // console.log('track: ', current_track)
     return (
         <>
-            <h3>Sample Music</h3>
+            <h2>Sample Music</h2>
             <div className='displayBoxes'>
                 <div className="artistShows webBox">
                     <div className="container">

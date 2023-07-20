@@ -1,11 +1,12 @@
 @import '_cards';
 
 .homePage {
-    height: 98vh;
+    height: 90vh;
 }
 
 .mainBox {
     display: flex;
+    align-items: flex-end;
 }
 
 .displayBoxes {
@@ -17,3 +18,21 @@
     max-height: 80%;
     overflow: auto;
 }
+
+// .home {
+//     border: 2px solid magenta;
+// }
+
+.profPic {
+    display: flex;
+    height: 180px;
+    width: 180px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+// h2 {
+//     padding: 0;
+//     margin: 5px;
+// }

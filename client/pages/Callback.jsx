@@ -36,13 +36,13 @@ export default function Callback() {
         console.log('userData.location', userData.location)
         setGlobalValues({ access_token: userData.accessToken, email: userData.email, username: userData.username, profile_pic: userData.profile_pic, location: userData.location})
         let redirect = '';
-        if (userData.exists === false){
+        if (userData.exists === false) {
           redirect = '/signup';
         } else {
           redirect = '/home';
         }
         navigate(redirect);
-       
+
       }
       catch (err) {
         console.log(err)

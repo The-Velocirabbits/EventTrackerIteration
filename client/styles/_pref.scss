@@ -1,13 +1,112 @@
-
+@import '_variables';
 
 .preferencesPage {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .preferences {
-    display: flex;
-    flex-wrap: wrap;
-    width: 90%;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.preferences {
+  display: flex;
+  flex-wrap: wrap;
+  width: 90%;
+}
+
+.current {
+  display: flex;
+  width: 90%;
+  height: 80%;
+  margin-left: 25px;
+  border: 1px solid $border-color2;
+  border-radius: 5px;
+  padding-right: 50px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.artistList,
+.genreList {
+  height: 250px;
+  overflow: auto;
+  border: 1px solid $border-color2;
+  border-radius: 5px;
+  display: flex;
+  justify-content: start;
+  margin: 10px;
+}
+
+.add {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid $border-color2;
+  border-radius: 5px;
+  padding: 20px;
+  width: 10%;
+  height: 80%;
+  margin-bottom: 20px;
+}
+
+.music {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.currentGenres,
+.currentArtists {
+  width: 30%;
+}
+
+.prefCrumb {
+  display: flex;
+  align-self: flex-end;
+}
+
+.basicInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  align-items: left;
+  width: 20%;
+  height: 80%;
+  padding: 20px;
+  margin: 10px;
+  color: rgb(243, 240, 240);
+  border-radius: 5px;
+  border: 1px solid $border-color;
+}
+
+.userInfo {
+  display: flex;
+  align-items: start;
+  width: 100%;
+  padding: 20px;
+  border: 1px solid $border-color2;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.prefProf {
+  display: flex;
+  align-self: center;
+  width: 20%;
+  height: 80%;
+  margin: 10px;
+  padding: 20px;
+  border: 1px solid $border-color2;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.updateLocation {
+  display: flex;
+  width: 20%;
+  height: 80%;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 15px;
+  border: 1px solid $border-color2;
+  border-radius: 5px;
+  margin: 10px;
+}
