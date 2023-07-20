@@ -153,7 +153,7 @@ export default function Preference() {
       console.log(err);
     }
   };
-  
+
   const handleDeleteGenre = async (genreToDelete) => {
     try {
       await fetch(`/api/preferences?email=${encodeURIComponent(userData.email)}`, {
@@ -166,8 +166,8 @@ export default function Preference() {
       console.log(err);
     }
   };
-  
-  
+
+
 
   console.log('currArtists: ', currArtists)
   console.log('currGenres: ', currGenres)
@@ -183,8 +183,13 @@ export default function Preference() {
           <Link to="/home">HOME PAGE</Link>
         </Breadcrumbs>
       </div>
+
+
+
       <div className="preferences">
         <div className="userInfo">
+
+
           <div className="basicInfo">
             <h1>Basic Info</h1>
             <p>Username: {userData.username}</p>
@@ -193,6 +198,8 @@ export default function Preference() {
             <p>State: {currLocation.state}</p>
             {/* add update function! */}
           </div>
+
+
           <div>
             <div className="updateLocation">
               <p>to update location:</p>
@@ -223,43 +230,55 @@ export default function Preference() {
               </form>
             </div>
           </div>
+
+
         </div>
+
+
+
+
         <div className="music">
-          <div className="add1">
-            <div className="add">
-              <form onSubmit={handleAddArtist} autoComplete="off">
-                <div className="addArtists">
-                  <h2>Add Artists:</h2>
-                  <input
-                    name="artistName"
-                    type="text"
-                    placeholder="Artist's Name"
-                    required
-                    onChange={handleChangeAddArtist}
-                  ></input>
-                  <br></br>
-                </div>
-                <input className="Btn" type="submit" value="add"></input>
-              </form>
-              <form onSubmit={handleAddGenre} autoComplete="off">
-                <div className="addGenre">
-                  <h2>Add Genre:</h2>
-                  <input
-                    name="genreName"
-                    type="text"
-                    placeholder="Genre Name"
-                    required
-                    onChange={handleChangeAddGenre}
-                  ></input>
-                  <br></br>
-                </div>
-                <input className="Btn" type="submit" value="add"></input>
-              </form>
-            </div>
+
+
+
+          <div className="add">
+            <form onSubmit={handleAddArtist} autoComplete="off">
+              <div className="addArtists">
+                <h2>Add Artists:</h2>
+                <input
+                  name="artistName"
+                  type="text"
+                  placeholder="Artist's Name"
+                  required
+                  onChange={handleChangeAddArtist}
+                ></input>
+                <br></br>
+              </div>
+              <input className="Btn" type="submit" value="add"></input>
+            </form>
+            <form onSubmit={handleAddGenre} autoComplete="off">
+              <div className="addGenre">
+                <h2>Add Genre:</h2>
+                <input
+                  name="genreName"
+                  type="text"
+                  placeholder="Genre Name"
+                  required
+                  onChange={handleChangeAddGenre}
+                ></input>
+                <br></br>
+              </div>
+              <input className="Btn" type="submit" value="add"></input>
+            </form>
           </div>
+
+
+
           <div className="current">
+
+
             <div className="currentArtists">
-              <h2>Current Artists Tracked:</h2>
+              <h2>Artists:</h2>
               <div className="artistList">
                 <ul>
                   {currArtists.map((artist, i) => (
@@ -268,8 +287,10 @@ export default function Preference() {
                 </ul>
               </div>
             </div>
+
+
             <div className="currentGenres">
-              <h2>Current Genres Tracked:</h2>
+              <h2>Genres:</h2>
               <div className="genreList">
                 <ul>
                   {currGenres.map((genre, i) => (
@@ -278,6 +299,9 @@ export default function Preference() {
                 </ul>
               </div>
             </div>
+
+
+
           </div>
         </div>
       </div>

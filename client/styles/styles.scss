@@ -100,41 +100,4 @@ body {
   border-color: rgb(4, 172, 4);
 }
 
-.music {
-  display: flex;
-  flex-direction: row;
-  flex-grow: 1;
-  flex-shrink: 1;
-}
 
-.add {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 20px;
-  width: 80%;
-  margin-bottom: 20px;
-}
-
-.current {
-  display: flex;
-  flex-direction: column;
-  width: 80%;
-  margin-left: 25px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding-right: 50px;
-  padding: 20px;
-  margin-bottom: 20px;
-}
-
-.artistList,
-.genreList {
-  height: 250px;
-  overflow: auto;
-  text-align: justify;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding-right: 50px;
-}
