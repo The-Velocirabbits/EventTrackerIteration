@@ -15,7 +15,6 @@ export default function HomePage() {
 
 
   useEffect(() => {
-    //console.log('Global Values: ', globalValues)
     const fetchingArtists = async () => {
       try {
         const response = await fetch(

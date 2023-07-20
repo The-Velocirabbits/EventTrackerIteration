@@ -1,15 +1,12 @@
 import React, { useEffect, useState, useContext } from 'react';
-// import '../styles.css';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Card, CardContent, Typography, Breadcrumbs } from '@mui/material';
 import { ValuesContext } from '../pages/Contexts';
 
 export default function Preference() {
-  // const location = useLocation();
-  // console.log('location: ', location);
+
   const { globalValues } = useContext(ValuesContext);
   const { email, username, access_token } = globalValues;
-  // const email = 'haliahaynes';
 
   const [userData, setUserData] = useState({});
   const [newArtist, setNewArtist] = useState('');
@@ -51,19 +48,11 @@ export default function Preference() {
   const handleChangeCity = (e) => {
     const newCity = e.target.value;
     setCurrLocation((prevLocation) => ({ ...prevLocation, city: newCity }))
-    // setUserData((curr) => ({
-    //   ...curr,
-    //   city: newCity,
-    // }));
   };
   //changing city's state
   const handleChangeState = (e) => {
     const newState = e.target.value;
     setCurrLocation((prevLocation) => ({ ...prevLocation, state: newState }))
-    // setUserData((curr) => ({
-    //   ...curr,
-    //   state: newState,
-    // }));
   };
   //sending PATCH request with updated state
   const handleLocation = async (e) => {
@@ -72,7 +61,6 @@ export default function Preference() {
       const toUpdate = {
         email: userData.email,
         location: { city: currLocation.city, state: currLocation.state },
-        // location: { city: userData.location.city, state: userData.location.state },
       };
       await fetch(
         `/api/preferences?email=${encodeURIComponent(userData.email)}`,
@@ -103,6 +91,7 @@ export default function Preference() {
       const addInfo = {
         email: userData.email,
         artists: newArtist,
+        type: 'add'
       };
       await fetch(
         `/api/preferences?email=${encodeURIComponent(userData.email)}`,
@@ -135,6 +124,7 @@ export default function Preference() {
       const addInfo = {
         email: userData.email,
         genres: newGenre,
+        type: 'add'
       };
       await fetch(
         `/api/preferences?email=${encodeURIComponent(userData.email)}`,
@@ -151,11 +141,36 @@ export default function Preference() {
     }
   };
 
+  const handleDeleteArtist = async (artistToDelete) => {
+    try {
+      await fetch(`/api/preferences?email=${encodeURIComponent(userData.email)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: userData.email, artists: artistToDelete, type: 'delete' }),
+      });
+      setCurrArtists((curr) => curr.filter((artist) => artist !== artistToDelete));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  
+  const handleDeleteGenre = async (genreToDelete) => {
+    try {
+      await fetch(`/api/preferences?email=${encodeURIComponent(userData.email)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: userData.email, genres: genreToDelete, type: 'delete' }),
+      });
+      setCurrGenres((curr) => curr.filter((genre) => genre !== genreToDelete));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  
+  
+
   console.log('currArtists: ', currArtists)
-  // setCurrArtists([])
   console.log('currGenres: ', currGenres)
-  // setCurrGenres([])
-  // console.log('locations1', userData.locations)
   console.log('locations2: ', currLocation)
 
   return (
@@ -248,8 +263,7 @@ export default function Preference() {
               <div className="artistList">
                 <ul>
                   {currArtists.map((artist, i) => (
-                    // <div key={i}>{artist} <button>X</button> </div>
-                    <li key={i}>{artist}<button>X</button> </li>
+                    <li key={i}>{artist}  <button onClick={() => handleDeleteArtist(artist)}>X</button></li>
                   ))}
                 </ul>
               </div>
@@ -259,7 +273,7 @@ export default function Preference() {
               <div className="genreList">
                 <ul>
                   {currGenres.map((genre, i) => (
-                    <li key={genre + i}>{genre} </li>
+                    <li key={genre + i}>{genre}  <button onClick={() => handleDeleteGenre(genre)}>X</button></li>
                   ))}
                 </ul>
               </div>
