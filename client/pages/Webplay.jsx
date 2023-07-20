@@ -45,7 +45,7 @@ export default function WebPlayback() {
                 //     console.log(state.track_window.current_track.id, current_track.id);
                 //     setTrack(state.track_window.current_track);
                 // }
-                setTrack(state.track_window.current_track);
+                if (state.track_window.current_track) setTrack(state.track_window.current_track);
                 console.log('STATE')
                 console.log(state);
                 setPaused(state.paused);
