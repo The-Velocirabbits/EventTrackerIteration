@@ -8,7 +8,7 @@ import Webplay from './Webplay.jsx';
 
 export default function HomePage() {
   const { globalValues } = useContext(ValuesContext);
-  const { email, username, access_token, profile_pic } = globalValues;
+  const { email, username, access_token, profile_pic, location } = globalValues;
   const [userData, setUserData] = useState({});
   const [artists, setArtists] = useState(['ye']);
   const [genres, setGenres] = useState(['genre']);
@@ -50,6 +50,7 @@ export default function HomePage() {
       }
     };
     fetchingGenres();
+
   }, []);
 
   return (
