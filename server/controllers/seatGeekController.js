@@ -1,4 +1,4 @@
-const { seatgeek } = require('../models/secrets.js');
+const { seatgeek, google } = require('../models/secrets.js');
 
 const seatGeekController = {};
 
@@ -11,6 +11,7 @@ seatGeekController.getArtistEvents = async (req, res, next) => {
     const eventsArray = [];
     const artists = res.locals.userInfo.artists;
     const city = res.locals.userInfo.location.city;
+    const state = res.locals.userInfo.location.state
     //const artists = ['ice-spice', 'all-them-witches', 'clutch'];
     //const city = 'Denver';
 
@@ -27,9 +28,20 @@ seatGeekController.getArtistEvents = async (req, res, next) => {
       query based on City, Artist, and date range of 3 Months
       */
       const artistString = artists[i].toLowerCase().replaceAll(' ', '-');
+      //TODO: change this
+      //~ get long and lat
+      const noSpacesCity = city.replace(/\s/g, '');
+      const locationResponse = fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${noSpacesCity},${state}&key=${google.api_key}`)
+      console.log('LOCATION RESPONSE HERE: ', locationResponse)
+      //~ get performers id
+      // const performerResponse
+
+      const zipcode = '10010'
       const response = await fetch(
+        // `https://api.seatgeek.com/2/recommendations/?client_id=${seatgeek.client_id}&client_secret=${seatgeek.client_secret}&performers.slug=${artistString}&range=100&postal_code==${zipcode}&datetime_utc.gte=${today}&datetime_utc.lte=${threeMonths}`
         `https://api.seatgeek.com/2/events/?client_id=${seatgeek.client_id}&client_secret=${seatgeek.client_secret}&performers.slug=${artistString}&venue.city=${city}&datetime_utc.gte=${today}&datetime_utc.lte=${threeMonths}`
       );
+      console.log('url fetching: ', `https://api.seatgeek.com/2/events/?client_id=${seatgeek.client_id}&client_secret=${seatgeek.client_secret}&performers.slug=${artistString}&venue.city=${city}&datetime_utc.gte=${today}&datetime_utc.lte=${threeMonths}`)
       const { events } = await response.json();
       console.log(events);
       //making a separate object for each event returned back for an artist
@@ -48,6 +60,8 @@ seatGeekController.getArtistEvents = async (req, res, next) => {
     }
     //attaching Array of objects to send as response to front end
     res.locals.artistEvents = eventsArray;
+    console.log('artist eventsArray length: ', eventsArray.length)
+
     return next();
   } catch (err) {
     return next({
