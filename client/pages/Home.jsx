@@ -70,8 +70,8 @@ export default function HomePage() {
       <div className='mainBox'>
         <List arr={artists} type='Artist' />
         <List arr={genres} type='Genre' />
+        <div id='webplay' className="showBox"><Webplay /></div>
       </div>
-      <Webplay />
     </div>
   );
 }

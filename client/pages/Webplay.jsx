@@ -31,12 +31,13 @@ export default function WebPlayback() {
         const script = document.createElement("script");
         script.src = "https://sdk.scdn.co/spotify-player.js";
         script.async = true;
-        document.body.appendChild(script);
+        const box = document.getElementById('webplay');
+        box.appendChild(script);
         window.onSpotifyWebPlaybackSDKReady = () => {
             const player = new window.Spotify.Player({
                 name: 'Web Playback SDK',
                 getOAuthToken: cb => { cb(access_token); },
-                volume: 0.2
+                volume: 0.14
             });
             setPlayer(player);
             player.addListener('ready', ({ device_id }) => {
@@ -133,20 +134,33 @@ export default function WebPlayback() {
     }
     return (
         <>
-            <div className="container">
-                <div className="main-wrapper">
-                    <img src={current_track.album.images[0].url} className="now-playing__cover" alt="" />
-                    <div className="now-playing__side">
-                        <div className="now-playing__name">{current_track.name}</div>
-                        <div className="now-playing__artist">{current_track.artists[0].name}</div>
+            <h3>Sample Music</h3>
+            <div className='displayBoxes'>
+                <div className="artistShows webBox">
+                    <div className="container">
+
+
+                        <div className="main-wrapper">
+                            <div><img src={current_track.album.images[0].url} className="now-playing__cover" alt="Image Loading..." /></div>
+                            <div className='buttonBar'>
+
+                                <button className="webButton" onClick={() => { player.previousTrack() }} >&lt;&lt;</button>
+                                <button className="webButton" onClick={() => { player.togglePlay() }} >{is_paused ? "PLAY" : "PAUSE"}</button>
+                                <button className="webButton" onClick={() => { player.nextTrack() }} >&gt;&gt;</button>
+
+
+                            </div>
+                            <div className="now-playing__side">
+                                <div className="now-playing__name">{current_track.name}</div>
+                                <div className="now-playing__artist">{current_track.artists[0].name}</div>
+                            </div>
+                        </div>
+
+                        <input placeholder='Enter Artist' onChange={(e) => { setArtistForm(e.target.value) }}></input>
+                        <button onClick={() => { artistSongs(artistForm) }}>submit</button>
+                        {songs ? <SongList /> : <div></div>}
                     </div>
                 </div>
-                <button className="btn-spotify" onClick={() => { player.previousTrack() }} >&lt;&lt;</button>
-                <button className="btn-spotify" onClick={() => { player.togglePlay() }} >{is_paused ? "PLAY" : "PAUSE"}</button>
-                <button className="btn-spotify" onClick={() => { player.nextTrack() }} >&gt;&gt;</button>
-                <input className="btn-spotify" placeholder='Enter Artist' onChange={(e) => { setArtistForm(e.target.value) }}></input>
-                <button className="btn-spotify" onClick={() => { artistSongs(artistForm) }}>submit</button>
-                {songs ? <SongList /> : <div></div>}
             </div>
         </>
     )
