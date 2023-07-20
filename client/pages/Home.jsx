@@ -13,8 +13,9 @@ export default function HomePage() {
   const [artists, setArtists] = useState(['ye']);
   const [genres, setGenres] = useState(['genre']);
 
+
   useEffect(() => {
-    console.log('Global Values: ', globalValues)
+    //console.log('Global Values: ', globalValues)
     const fetchingArtists = async () => {
       try {
         const response = await fetch(
@@ -61,8 +62,8 @@ export default function HomePage() {
             underline="hover"
             color="inherit"
             to="/preferences"
-            state={{ email, username, access_token }}
-          >PREFERENCES
+          >
+            PREFERENCES
           </Link>
         </Breadcrumbs>
       </div>
