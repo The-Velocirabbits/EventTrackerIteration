@@ -2,7 +2,7 @@ import React from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 export const List = ({ arr, type }) => {
-
+  if (!Array.isArray(arr)) return <div>idk bruther</div>
   return (
     <div className="showBox">
       <h3>Upcoming Shows</h3>
