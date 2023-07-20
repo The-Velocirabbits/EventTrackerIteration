@@ -23,19 +23,20 @@ export default function Callback() {
         const access_token = await response.json()
         console.log('callback:', access_token)
 
-        // //~ use access token to get profile data
-        const headers = { 'Authorization': `Bearer ${access_token}` }
+        //~ get profile pic from profile information
+        
 
+        //~ update user info in db
+        const headers = { 'Authorization': `Bearer ${access_token}` }
         const userInfo = await fetch('/api/authentication/email', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ accessToken: access_token })
         });
-
         const userData = await userInfo.json();
-         //~ set global value to have updated access_token
-        //TODO: set it to have updated email
-        setGlobalValues({ access_token: userData.accessToken, email: userData.email, username: userData.username })
+
+         //~ set global value to have updated information
+        setGlobalValues({ access_token: userData.accessToken, email: userData.email, username: userData.username, profile_pic: })
         let redirect = '';
         if (userData.exists === false){
           redirect = '/signup';
