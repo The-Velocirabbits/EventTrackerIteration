@@ -26,7 +26,7 @@ export default function WebPlayback() {
             const player = new window.Spotify.Player({
                 name: 'Web Playback SDK',
                 getOAuthToken: cb => { cb(access_token); },
-                volume: 0.14
+                volume: 0.06
             });
             setPlayer(player);
             player.addListener('ready', ({ device_id }) => {
